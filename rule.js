@@ -12,8 +12,8 @@ const Rule = {
     cridit: Number,
     debit: Number
   },
-  action: {
-    action: String,
+  actionType: {
+    actionType: String,
     field: String,
     findValue: String,
     numAdditionalChars: Number,

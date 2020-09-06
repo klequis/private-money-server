@@ -15,13 +15,13 @@ const newRule = {
   ],
   actions: [
     {
-      action: 'replaceAll',
+      actionType: 'replaceAll',
       field: 'description',
       replaceWithValue: '24 Hour Fitness',
       _id: '5e57d48edfb85a470c44e5b9'
     },
     {
-      action: 'categorize',
+      actionType: 'categorize',
       category1: 'gym',
       _id: '5e57d48edfb85a470c44e5ba'
     }

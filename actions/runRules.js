@@ -113,7 +113,7 @@ const runRules = async (passedInRules = []) => {
     for (let j = 0; j < actions.length; j++) {
       const action = actions[j]
 
-      switch (action.action) {
+      switch (action.actionType) {
         case actionTypes.omit:
           const omitUpdate = createOmitUpdate(rule)
           await updateMany(TRANSACTIONS_COLLECTION_NAME, filter, omitUpdate)
@@ -146,7 +146,7 @@ const runRules = async (passedInRules = []) => {
           )
           break
         default:
-          redf('unknown action type:', action.action)
+          redf('unknown action type:', action.actionType)
           redf('rule', rule)
           redf('action', action)
       }
