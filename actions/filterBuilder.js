@@ -1,5 +1,5 @@
 import {
-  dataFields,
+  transactionFields,
   convertOneFieldValue,
   operators
 } from 'db/constants'
@@ -54,13 +54,16 @@ const operationDoesNotContain = (field, value) => {
 export const conditionBuilder = (criterion) => {
   // takes a single criterion object
   // TODO: hard coding descriptions  => origDescription. Where should this logic be?
+
   const { field: origField, operation, value } = criterion
 
   const field =
-    origField === dataFields.description.name
-      ? dataFields.origDescription.name
+    origField === transactionFields.description.name
+      ? transactionFields.origDescription.name
       : origField
+
   LOG_FILTER && yellow('operation', operation)
+  
   switch (operation) {
     case operators.beginsWith.name:
       return operationBeginsWith(field, value)
