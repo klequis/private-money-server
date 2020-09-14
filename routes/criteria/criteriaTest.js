@@ -25,8 +25,11 @@ const criteriaTest = wrap(async (req, res) => {
     const filter = filterBuilder(convertedCriteria)
     green('criteriaTest: filter', filter)
     const data = await find(TRANSACTIONS_COLLECTION_NAME, filter)
-    const descriptionsOnly = data.map(doc => doc.origDescription)
-    res.send(descriptionsOnly)
+    // 2020.09.14 - change from descriptionOnly to _idOnly
+    // const descriptionsOnly = data.map(doc => doc.origDescription)
+    // res.send(descriptionsOnly)
+    const idOnly = data.map(doc => doc._id)
+    res.send(idOnly)
   } catch (e) {
     redf('criteriaTest ERROR', e.message)
     console.log(e)
