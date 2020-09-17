@@ -39,19 +39,12 @@ export const transactionFields = {
   },
   acctId: {
     name: 'acctId',
-    type: dataTypes.String
+    type: dataTypes.String,
+    isCriteriaField: true
   },
   amount: {
     // field for export only
     name: 'amount',
-    type: dataTypes.Number
-  },
-  credit: {
-    name: 'credit',
-    type: dataTypes.Number
-  },
-  debit: {
-    name: 'debit',
     type: dataTypes.Number
   },
   category1: {
@@ -66,13 +59,25 @@ export const transactionFields = {
     name: 'checkNumber',
     type: dataTypes.String
   },
+  credit: {
+    name: 'credit',
+    type: dataTypes.Number,
+    isCriteriaField: true
+  },
   date: {
     name: 'date',
-    type: dataTypes.Date
+    type: dataTypes.Date,
+    isCriteriaField: true
+  },
+  debit: {
+    name: 'debit',
+    type: dataTypes.Number,
+    isCriteriaField: true
   },
   description: {
     name: 'description',
-    type: dataTypes.String
+    type: dataTypes.String,
+    isCriteriaField: true
   },
   omit: {
     name: 'omit',
@@ -88,7 +93,8 @@ export const transactionFields = {
   },
   type: {
     name: 'type',
-    type: dataTypes.String
+    type: dataTypes.String,
+    isCriteriaField: true
   }
 }
 

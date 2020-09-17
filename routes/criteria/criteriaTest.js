@@ -2,6 +2,7 @@ import wrap from 'routes/wrap'
 import { find } from 'db'
 import { convertCriteriaValuesToDb, TRANSACTIONS_COLLECTION_NAME } from 'db/constants'
 import { filterBuilder } from 'actions/filterBuilder'
+import criteriaValidation from './criteriaTest.validation'
 // import { mergeRight } from 'ramda'
 
 // eslint-disable-next-line
@@ -12,11 +13,15 @@ const criteriaTest = wrap(async (req, res) => {
   try {
     const { body } = req
     // body is an array
-    // green('criteriaTest: body', body)
+    green('criteriaTest: body', body)
 
     if (body.length < 1) {
       redf('criteriaTest', 'body.length is 0')
     }
+
+    
+
+    green('criteriaValidation', criteriaValidation(body))
 
     const convertedCriteria = convertCriteriaValuesToDb(body)
 
