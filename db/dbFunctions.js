@@ -55,14 +55,14 @@ export const close = async () => {
 }
 
 export const findOneAndReplace = async (collection, filter, replacement) => {
-  green('filter', filter)  
-  green('replacement', replacement)
+  // green('filter', filter)  
+  // green('replacement', replacement)
   try {
     const { db } = await connectDB()
     const r = await db
       .collection(collection)
       .findOneAndReplace(filter, replacement)
-    green('r', r)
+    // green('r', r)
     return r.ops
   } catch (e) {
     throw new Error(e.message)

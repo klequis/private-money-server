@@ -26,7 +26,7 @@ const allDataByDescription = wrap(async (req, res) => {
     // })
     const moreThan2 = data.filter(t => {
       if (t.ruleIds === undefined) {
-        console.log(t.ruleIds)
+        // console.log(t.ruleIds)
         return true
       }
       if (t.ruleIds.length > 1) {
@@ -34,7 +34,7 @@ const allDataByDescription = wrap(async (req, res) => {
       }
       return false
     })
-    yellow('moreThan2', moreThan2.length)
+    // yellow('moreThan2', moreThan2.length)
 
     // TODO: remove slice
     // const d1 = data.slice(1, 5, data)

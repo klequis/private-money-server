@@ -9,7 +9,7 @@ import criteriaValidation from './criteriaTest.validation'
 import { redf, green, logRequest } from 'logger'
 
 const criteriaTest = wrap(async (req, res) => {
-  green('criteriaTest -----------------')
+  
   try {
     const { body } = req
     // body is an array
@@ -20,15 +20,19 @@ const criteriaTest = wrap(async (req, res) => {
     }
 
     
-
-    green('criteriaValidation', criteriaValidation(body))
+    const valid = criteriaValidation(body)
+    if (valid.length === 0) {
+      green('criteriaTest.criteriaValidation', 'no errors')
+    } else {
+      redf('ERROR: criteriaTest.criteriaValidation', valid)
+    }
 
     const convertedCriteria = convertCriteriaValuesToDb(body)
 
-    green('convertedCriteria', convertedCriteria)
+    // green('convertedCriteria', convertedCriteria)
 
     const filter = filterBuilder(convertedCriteria)
-    green('criteriaTest: filter', filter)
+    // green('criteriaTest: filter', filter)
     const data = await find(TRANSACTIONS_COLLECTION_NAME, filter)
     // 2020.09.14 - change from descriptionOnly to _idOnly
     // const descriptionsOnly = data.map(doc => doc.origDescription)

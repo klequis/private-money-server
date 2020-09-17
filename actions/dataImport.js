@@ -180,7 +180,7 @@ const dataImport = async (loadRaw = false) => {
       collation: { caseLevel: true, locale: 'en_US' }
     })
     await runRules()
-    green('Number of docs imported', docsInserted)
+    // green('Number of docs imported', docsInserted)
     return JSON.stringify([
       {
         operation: 'load data',

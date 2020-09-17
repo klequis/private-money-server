@@ -98,6 +98,15 @@ export const transactionFields = {
   }
 }
 
+export const criteriaSelectFields = R.values(
+  R.filter((x) => x.isCriteriaField === true, transactionFields)
+)
+
+export const criteriaSelectFieldNames = R.map(
+  (f) => f.name,
+  criteriaSelectFields
+)
+
 export const actionTypes = {
   categorize: 'categorize',
   omit: 'omit',
@@ -128,6 +137,12 @@ export const operators = {
   // }
   // in: 'in'
 }
+
+export const operatorSelectFields = R.values(operators)
+export const operatorSelectFieldNames = R.map(
+  (f) => f.name,
+  operatorSelectFields
+)
 
 export const actionFields = {
   category1: {
