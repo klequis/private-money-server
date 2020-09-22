@@ -117,8 +117,9 @@ const ruleDelete = wrap(async (req, res) => {
     res.send({ value: 'test' })
 
   } catch (e) {
-    redf('ruleDelete ERROR', e.message)
-    console.log(e)
+    // redf('ruleDelete ERROR', e.message)
+    // console.log(e)
+    throw e
   }
 })
 

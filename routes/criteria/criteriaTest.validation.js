@@ -3,9 +3,10 @@ import {
   operatorSelectFieldNames,
   criteriaSelectFieldNames
 } from 'db/constants'
+import isNilOrEmpty from 'lib/isNilOrEmpty'
 
 // eslint-disable-next-line
-import { blue, redf } from 'logger'
+import { blue, yellow, redf } from 'logger'
 
 const isCriterionFieldPropValueValid = (criterion) => {
   const { field } = criterion
@@ -18,6 +19,7 @@ const isCriterionValuePropValueLongEnough = (criterion) => {
     return "Criterion is missing required property 'value'"
   }
   const { value } = criterion
+  
   return value.length > 2
     ? ''
     : `criterion: value prop must be 3 or more characters, received ${value} with length ${value.length}`
@@ -53,6 +55,7 @@ const check = R.pipe(
 )
 
 const criteriaValidation = (criteria) => {
+  // yellow('criteriaTest.validation: criteria', criteria)
   const _is = R.filter((e) => e.errors.length > 0)(R.map(check, criteria))
   return _is
 }

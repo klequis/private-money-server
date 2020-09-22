@@ -13,6 +13,7 @@ import exportData from 'routes/exportData'
 import duplicates from 'routes/duplicates'
 import test from 'routes/test'
 import debug from 'debug'
+import * as R from 'ramda'
 
 // eslint-disable-next-line
 import { redf, red, green } from '../logger'
@@ -33,7 +34,6 @@ app.get('/health', async (req, res) => {
   try {
     res.send(JSON.stringify({ status: 'All good here.' }))
   } catch (e) {
-    res.send()
     res.send(JSON.stringify({ status: 'Something went wrong.' }))
   }
 })
@@ -62,11 +62,11 @@ const logError = (err, verbose = false) => {
   if (process.env.NODE_ENV !== 'production') {
     console.log()
     if (verbose) {
-      redf('server.error', err) // works in test
-      lServerError(err) // works only in dev
+      redf('server.error: err', err) // works in test
+      // lServerError(err) // works only in dev
     } else {
-      redf('server.error', err.message) // works in test
-      lServerError(err.message) // works only in dev
+      redf('server.error: message', err.message) // works in test
+      // lServerError(err.message) // works only in dev
     }
     console.log()
   }
@@ -75,10 +75,13 @@ const logError = (err, verbose = false) => {
 const error = (err, req, res, next) => {
   let status
   const msg = err.message.toLowerCase()
+  let retMsg = null
+  green('server.error: msg', msg)
 
   if (msg === 'no authorization token was found') {
     status = 401
     logError(err)
+    retMsg = 'Authorization failed'
   } else if (msg.includes('no document found')) {
     status = 404
     logError(err)
@@ -88,13 +91,18 @@ const error = (err, req, res, next) => {
   } else if (msg.includes('unexpected string in json')) {
     status = 400
     logError(err)
+  } else if (msg.includes('econnrefused')) {
+    status = 500
+    logError(err)
+    retMsg = 'Internal server error'
   } else {
     status = 500
     logError(err, true)
   }
 
   res.status(status)
-  res.send()
+
+  res.send({ data: null, error: retMsg !== null ? retMsg : msg})
 }
 
 app.use(error)

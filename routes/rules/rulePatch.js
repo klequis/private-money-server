@@ -78,8 +78,9 @@ const rulePatch = wrap(async (req, res) => {
     res.send({ tmp: 'hi' })
     // res.send(updatedRule[0])
   } catch (e) {
-    redf('updateRule ERROR', e.message)
-    console.log(e)
+    throw e
+    // redf('updateRule ERROR', e.message)
+    // console.log(e)
   }
 })
 

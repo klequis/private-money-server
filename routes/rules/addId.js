@@ -75,9 +75,10 @@ const addId = wrap(async (req, res) => {
     })
     res.send('success')
   } catch (e) {
-    redf('addIn ERROR', e.message)
-    console.log(e)
-    res.send('failure')
+    throw e
+    // redf('addIn ERROR', e.message)
+    // console.log(e)
+    // res.send('failure')
   }
 })
 

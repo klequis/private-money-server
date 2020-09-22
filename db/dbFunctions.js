@@ -9,6 +9,14 @@ const MongoClient = mongodb.MongoClient
 
 let client
 
+class DatabaseError extends Error {
+  constructor(e, ...params) {
+    super(...params)
+    this.name = "DatabaseError"
+    this.message = e.message
+  }
+}
+
 const idStringToObjectID = obj => {
   switch (typeof obj) {
     case 'string':
@@ -100,7 +108,9 @@ export const insertMany = async (collection, data) => {
 export const dropCollection = async collection => {
   try {
     const { db } = await connectDB()
+    
     return await db.collection(collection).drop()
+    
   } catch (e) {
     if (e.message === 'ns not found') {
       return true
@@ -132,7 +142,8 @@ export const insertOne = async (collection, data) => {
  *
  * @param {string} collection the name of a collection
  * @param {object} filter filter criteria
- * @param {object} project a valid projection
+ * @param {object} projection a valid projection
+ * @param {object} collation 
  * @returns {array}
  *
  */
@@ -144,6 +155,7 @@ export const find = async (
 ) => {
   try {
     const { db } = await connectDB()
+    
     const ret = await db
       .collection(collection)
       .find(filter)
@@ -152,7 +164,8 @@ export const find = async (
       .toArray()
     return ret
   } catch (e) {
-    throw new Error(e.message)
+    
+    throw new DatabaseError(e)
   }
 }
 
@@ -160,7 +173,7 @@ export const find = async (
  *
  * @param {string} collection the name of a collection
  * @param {object} filter filter criteria
- * @param {object} project a valid projection
+ * @param {object} projection a valid projection
  * @returns {array}
  *
  */
@@ -169,6 +182,7 @@ export const findOne = async (collection, filter = {}, projection = {}) => {
   try {
     const { db } = await connectDB()
     return await db.collection(collection).findOne(f, { projection })
+    
   } catch (e) {
     throw new Error(e.message)
   }
@@ -178,7 +192,7 @@ export const findOne = async (collection, filter = {}, projection = {}) => {
  *
  * @param {string} collection the name of a collection
  * @param {string} id a valid _id as string
- * @param {object} project a valid projection
+ * @param {object} projection a valid projection
  * @returns {object}
  */
 export const findById = async (collection, id, projection = {}) => {
@@ -198,7 +212,7 @@ export const findById = async (collection, id, projection = {}) => {
 /**
  *
  * @param {string} collection the name of a collection
- * @param {string} id a valid _id as string
+ * @param {object} filter a valid mongodb filter
  * @returns {object}
  */
 export const findOneAndDelete = async (collection, filter) => {
@@ -235,7 +249,7 @@ export const deleteMany = async (collection, filter) => {
 /**
  *
  * @param {string} collection the name of a collection
- * @param {string} id a valid _id as string
+ * @param {object} filter a valid mongodb filter
  * @param {object} update document properties to be updated such as { title: 'new title', completed: true }
  * @param {boolean} returnOriginal if true, returns the original document instead of the updated one
  * @returns {object}

@@ -36,8 +36,9 @@ const rulePost = wrap(async (req, res) => {
     await runRules()
     res.send({ _id: _id })
   } catch (e) {
-    redf('rules.newRule.rulePost: ERROR', e.message)
-    console.log(e)
+    throw e
+    // redf('rules.newRule.rulePost: ERROR', e.message)
+    // console.log(e)
   }
 })
 

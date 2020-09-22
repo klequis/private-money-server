@@ -41,9 +41,12 @@ const allDataByDescription = wrap(async (req, res) => {
     // red(`TODO: results truncated to ${d1.length} transactions`)
     res.send(convertFieldValuesToUi(moreThan2))
   } catch (e) {
-    redf('views/allDataByDescription', e.message)
-    console.log(e)
+    // redf('views/allDataByDescription', e.message)
+    throw e
+    // console.log(e)
   }
 })
 
 export default allDataByDescription
+
+// TODO: 
