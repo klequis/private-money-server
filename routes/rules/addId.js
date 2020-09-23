@@ -12,6 +12,7 @@ import { RULES_COLLECTION_NAME } from 'db/constants'
 import { find, findOneAndReplace } from 'db/dbFunctions'
 import { mergeRight } from 'ramda'
 
+// @ts-ignore
 // eslint-disable-next-line
 import { red, redf, green, yellow, logRequest } from 'logger'
 import { ObjectID } from 'mongodb'

@@ -1,10 +1,11 @@
 import * as R from 'ramda'
 import {
+  transactionFields,
   operatorSelectFieldNames,
   criteriaSelectFieldNames
 } from 'db/constants'
-import isNilOrEmpty from 'lib/isNilOrEmpty'
 
+// @ts-ignore
 // eslint-disable-next-line
 import { blue, yellow, redf } from 'logger'
 

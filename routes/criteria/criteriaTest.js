@@ -21,7 +21,7 @@ const criteriaTest = wrap(async (req, res) => {
 
     
     const valid = criteriaValidation(body)
-    // green('valid', valid)
+    green('valid', valid)
     // if (valid.length === 0) {
     //   green('criteriaTest.criteriaValidation', 'no errors')
     // } else {
