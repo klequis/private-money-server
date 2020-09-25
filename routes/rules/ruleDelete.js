@@ -62,7 +62,8 @@ const ruleDelete = wrap(async (req, res) => {
 
     // return rules
     await runRules()
-
+    
+    // TODO: incorrect data format
     res.send({ value: 'test' })
 
   } catch (e) {

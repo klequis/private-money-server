@@ -9,7 +9,7 @@ import { redf, green, logRequest } from 'logger'
 
 const criteriaTest = wrap(async (req, res) => {
   
-  try {
+  // try {
     const { body } = req
     // body is an array
 
@@ -27,7 +27,7 @@ const criteriaTest = wrap(async (req, res) => {
     // }
 
     if (valid.length > 0) {
-      res.status(400).send({ result: null, errors: valid})
+      res.status(400).send({ data: null, error: 'Invalid criteria'})
     } else {
       const convertedCriteria = convertCriteriaValuesToDb(body)
       const filter = filterBuilder(convertedCriteria)
@@ -36,13 +36,13 @@ const criteriaTest = wrap(async (req, res) => {
       // const descriptionsOnly = data.map(doc => doc.origDescription)
       // res.send(descriptionsOnly)
       const idOnly = data.map(doc => doc._id)
-      res.send(idOnly)
+      res.send({ data: idOnly, error: null})
     }
 
     
-  } catch (e) {
-    throw e
-  }
+  // } catch (e) {g
+  //   throw e
+  // }
 })
 
 export default criteriaTest

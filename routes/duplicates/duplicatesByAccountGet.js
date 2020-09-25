@@ -35,10 +35,11 @@ const duplicatesGet = wrap(async (req, res) => {
     const q = [match1, group1]
     const ret = await executeAggregate(TRANSACTIONS_COLLECTION_NAME, q)
     const y = R.map(replaceId, ret)
-    res.send(convertFieldValuesToUi(y))
+    res.send({ data: convertFieldValuesToUi(y), error: null })
   } catch (e) {
-    redf('duplicates/duplicatesByAccountGet', e.message)
-    console.log(e)
+    throw e
+    // redf('duplicates/duplicatesByAccountGet', e.message)
+    // console.log(e)
   }
 })
 

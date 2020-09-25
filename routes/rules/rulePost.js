@@ -30,6 +30,8 @@ const rulePost = wrap(async (req, res) => {
     yellow('rulePost: inserted', i)
     const { _id } = i[0]
     await runRules()
+
+    // TODO: incorrect data format
     res.send({ _id: _id })
   } catch (e) {
     throw e

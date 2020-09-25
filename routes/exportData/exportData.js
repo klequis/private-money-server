@@ -12,6 +12,8 @@ const exportData = wrap(async (req, res, next) => {
   } catch (e) {
     red('exportData ERROR', e.message)
     console.log(e)
+
+    // TODO: incorrect data format
     res.send(JSON.stringify({ status: 'failure' }))
   }
 })

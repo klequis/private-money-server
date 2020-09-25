@@ -6,14 +6,14 @@ import { RULES_COLLECTION_NAME, convertFieldValuesToUi } from 'db/constants'
 import { red, green, yellow, logRequest } from 'logger'
 
 const ruleGet = wrap(async (req, res) => {
-  try {
+  // try {
     const { params } = req
     const { ruleid } = params
     const f = await findById(RULES_COLLECTION_NAME, ruleid)
-    res.send(convertFieldValuesToUi(f))
-  } catch (e) {
-    throw e
-  }
+    res.send({ data: convertFieldValuesToUi(f), error: null })
+  // } catch (e) {
+  //   throw e
+  // }
 })
 
 export default ruleGet

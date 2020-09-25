@@ -72,7 +72,7 @@ const checkNewDuplicates = wrap(async (req, res) => {
 
   const f = await find(TRANSACTIONS_COLLECTION_NAME, { _id: { $in: flat } })
   yellow('WARN', 'should convert values ToUi?')
-  res.send(f)
+  res.send({ data: f, error: null })
 })
 
 export default checkNewDuplicates

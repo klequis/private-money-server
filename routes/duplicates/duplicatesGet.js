@@ -8,10 +8,9 @@ import { redf, yellow } from 'logger'
 const duplicatesGet = wrap(async (req, res) => {
   try {
     const data = await find(TRANSACTIONS_COLLECTION_NAME, { duplicate: true })
-    res.send(convertFieldValuesToUi(data))
+    res.send({ data: convertFieldValuesToUi(data), error: null })
   } catch (e) {
-    redf('duplicates/duplicatesGet', e.message)
-    console.log(e)
+    throw e
   }
 })
 

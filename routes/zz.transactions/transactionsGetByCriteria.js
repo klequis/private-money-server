@@ -13,7 +13,8 @@ const dataGetByCriteria = wrap(async (req, res, next) => {
   const { field, operation, value } = body
   const filter = filterBuilder([{ field, operation, value }])
   const data = await find(TRANSACTIONS_COLLECTION_NAME, filter)
-  res.send(convertFieldValuesToUi(data))
+  
+  res.send({ data: convertFieldValuesToUi(data), error: null })
 })
 
 export default dataGetByCriteria

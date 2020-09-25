@@ -42,6 +42,7 @@ const test = wrap(async (req, res) => {
     // const t = await find(RULES_COLLECTION_NAME, { _id: s[i]._id })
     // yellow('t', t)
   }
+  // TODO: incorrect data format
   res.send(s)
 })
 

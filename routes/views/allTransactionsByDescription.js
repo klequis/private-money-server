@@ -8,7 +8,7 @@ import {
 import { yellow, red, redf } from 'logger'
 
 const allDataByDescription = wrap(async (req, res) => {
-  try {
+  // try {
     const data = await find(TRANSACTIONS_COLLECTION_NAME, {})
     // TODO: tmp code
     const moreThan2 = data.filter(t => {
@@ -21,12 +21,12 @@ const allDataByDescription = wrap(async (req, res) => {
       }
       return false
     })
-    res.send(convertFieldValuesToUi(moreThan2))
-  } catch (e) {
-    // redf('views/allDataByDescription', e.message)
-    throw e
-    // console.log(e)
-  }
+    res.send({ data: convertFieldValuesToUi(moreThan2), error: null })
+  // } catch (e) {
+  //   // redf('views/allDataByDescription', e.message)
+  //   throw e
+  //   // console.log(e)
+  // }
 })
 
 export default allDataByDescription

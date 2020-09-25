@@ -75,6 +75,8 @@ const rulePatch = wrap(async (req, res) => {
     await runRules()
     // findOneAndUpdate returns an array even though it always returns one item.
     // Send only the item to the client
+
+    // TODO: incorrect data format
     res.send({ tmp: 'hi' })
     // res.send(updatedRule[0])
   } catch (e) {

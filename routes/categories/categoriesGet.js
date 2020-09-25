@@ -7,6 +7,7 @@ import { green, logRequest } from 'logger'
 
 const categories = wrap(async (req, res, next) => {
   const data = await find(CATEGORIES_COLLECTION_NAME, {})
+  // TODO: incorrect data format
   res.send(data)
 })
 

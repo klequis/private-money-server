@@ -13,13 +13,12 @@ import exportData from 'routes/exportData'
 import duplicates from 'routes/duplicates'
 import test from 'routes/test'
 import debug from 'debug'
-import * as R from 'ramda'
 
 // eslint-disable-next-line
 import { redf, red, green } from '../logger'
 
 const lServer = debug('server')
-const lServerError = debug('server:ERROR')
+// const lServerError = debug('server:ERROR')
 
 const cfg = config()
 
@@ -76,7 +75,7 @@ const error = (err, req, res, next) => {
   let status
   const msg = err.message.toLowerCase()
   let retMsg = null
-  green('server.error: msg', msg)
+  red('server.error: msg-in', msg)
 
   if (msg === 'no authorization token was found') {
     status = 401
@@ -101,7 +100,7 @@ const error = (err, req, res, next) => {
   }
 
   res.status(status)
-  red('server.error: msg', retMsg !== null ? retMsg : msg)
+  red('server.error: msg-out', retMsg !== null ? retMsg : msg)
   res.send({ data: null, error: retMsg !== null ? retMsg : msg})
 }
 
