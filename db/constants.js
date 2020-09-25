@@ -224,10 +224,7 @@ const stringToBoolean = (value) => {
 
 const convertValueToDb = (fieldValuePair) => {
   const [field, value] = fieldValuePair
-  // yellow('field', field)
-  // yellow('value', value)
   const type = R.path([field, transactionFields.type.name], allFields())
-  // yellow('type', type)
   switch (type) {
     case dataTypes.String:
       return [field, value]
@@ -249,22 +246,17 @@ const convertValueToDb = (fieldValuePair) => {
 }
 
 const convertValuesToDb = R.pipe(
-  // R.tap(_log('convertValues - initial')),
   R.toPairs,
-  // R.tap(_log('convertValues - pairs')),
   R.map(convertValueToDb),
   R.fromPairs
 )
 
 export const convertFieldValuesToDb = (fields) => {
-  // yellow('fields', fields)
   const ret = R.map(convertValuesToDb, fields)
-  // yellow('convertFieldValuesToDb: ret', ret)
   return ret
 }
 
 const convertCriterionToDb = (criterion) => {
-  // yellow('convertCriterion: criterion', criterion)
   const { field, value } = criterion
   const valueConverted = convertValueToDb([field, value])
   return R.mergeRight(criterion, { value: valueConverted[1] })
@@ -272,7 +264,6 @@ const convertCriterionToDb = (criterion) => {
 
 export const convertCriteriaValuesToDb = (criteria) => {
   const ret = R.map(convertCriterionToDb, criteria)
-  // yellow('convertCriteriaValues: ret', ret)
   return ret
 }
 
@@ -280,10 +271,7 @@ export const convertCriteriaValuesToDb = (criteria) => {
 
 const convertValueToUi = (fieldValuePair) => {
   const [field, value] = fieldValuePair
-  // yellow('field', field)
-  // yellow('value', value)
   const type = R.path([field, transactionFields.type.name], allFields())
-  // yellow('type', type)
   switch (type) {
     case dataTypes.String:
       return [field, value]
@@ -305,22 +293,17 @@ const convertValueToUi = (fieldValuePair) => {
 }
 
 const convertValuesToUi = R.pipe(
-  // R.tap(_log('convertValues - initial')),
   R.toPairs,
-  // R.tap(_log('convertValues - pairs')),
   R.map(convertValueToUi),
   R.fromPairs
 )
 
 export const convertFieldValuesToUi = (fields) => {
-  // yellow('fields', fields)
   const ret = R.map(convertValuesToUi, fields)
-  // yellow('convertFieldValuesToUi: ret', ret)
   return ret
 }
 
 const convertCriterionToUi = (criterion) => {
-  // yellow('convertCriterion: criterion', criterion)
   const { field, value } = criterion
   const valueConverted = convertValueToUi([field, value])
   return R.mergeRight(criterion, { value: valueConverted[1] })
@@ -328,6 +311,5 @@ const convertCriterionToUi = (criterion) => {
 
 export const convertCriteriaValuesToUi = (criteria) => {
   const ret = R.map(convertCriterionToUi, criteria)
-  // yellow('convertCriteriaValues: ret', ret)
   return ret
 }

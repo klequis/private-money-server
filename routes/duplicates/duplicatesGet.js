@@ -2,7 +2,7 @@ import wrap from 'routes/wrap'
 import { find } from 'db/dbFunctions'
 import { TRANSACTIONS_COLLECTION_NAME, convertFieldValuesToUi } from 'db/constants'
 
-// eslint-disable-next-line
+// @ts-ignore
 import { redf, yellow } from 'logger'
 
 const duplicatesGet = wrap(async (req, res) => {

@@ -46,9 +46,7 @@ const createCategorizeUpdate = (action, rule) => {
       $set: { category1: action.category1 },
       $addToSet: { ruleIds: rule._id }
     }
-    // update = { category1: action.category1, $addToSet: { rules: 'abc' } }
   }
-  // green('createCategorizeUpdate: update', update)
   return update
 }
 
@@ -59,7 +57,6 @@ const createReplaceAllUpdate = (action, rule) => {
     },
     $addToSet: { ruleIds: rule._id }
   }
-  // green('createReplaceAllUpdate: update', update)
   return update
 }
 
@@ -73,7 +70,6 @@ const createStripUpdate = (action, doc, rule) => {
     },
     $addToSet: { ruleIds: rule._id }
   }
-  // green('createStripUpdate: update', update)
   return update
 }
 
@@ -82,12 +78,10 @@ const createOmitUpdate = (rule) => {
     $set: { omit: true },
     $addToSet: { ruleIds: rule._id }
   }
-  // green('createUpdateOmit: update', update)
   return update
 }
 
 const runRules = async (passedInRules = []) => {
-  // green('passedInRules', passedInRules)
   let rules
   if (passedInRules.length !== 0) {
     rules = passedInRules

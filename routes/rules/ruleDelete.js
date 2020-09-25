@@ -5,53 +5,8 @@ import runRules from 'actions/runRules'
 import { ObjectId } from 'mongodb'
 import { isValidMongoStringId } from 'lib/isValidMongoStringId'
 import { mergeRight, dissoc } from 'ramda'
+// @ts-ignore
 import { green, redf } from 'logger'
-
-// const a = [
-//   {
-//     $addFields: {
-//       FullName: { $concat: ['$StudentFirstName', ' ', '$StudentLastName'] }
-//     }
-//   },
-//   { $out: 'name' }
-// ]
-
-// const b = [
-//   {
-//     ruleIds: id
-//   },
-//   {
-//     $pull: {
-//       ruleIds: id
-//     },
-//     $set: {
-//       description: '$origDescription'
-//     }
-//   }
-// ]
-
-// const updateDataCollection = async id => {
-//   const find = {
-//     $match: { ruleIds: id }
-//   }
-//   const pull = {
-//     $project: {
-//       _id: '$_id',
-//       acctId: '$acctId',
-//       date: '$date',
-//       description: '$origDescription',
-//       cridit
-//     }
-//   }
-//   const set = {
-//     $set: {
-//       description: '$origDescription'
-//     }
-//   }
-//   const q = [find, pull, set]
-//   const ret = await executeAggregate(TRANSACTIONS_COLLECTION_NAME, q)
-//   green('updateDataCollection: ret', ret)
-// }
 
 const ruleDelete = wrap(async (req, res) => {
   /* TODO: confirm this is OK
@@ -66,7 +21,6 @@ const ruleDelete = wrap(async (req, res) => {
     const { params } = req
     const { ruleid } = params
 
-    green('ruleid', ruleid)
     if (!isValidMongoStringId(ruleid)) {
       throw new Error(`Param ruleid: ${ruleid} is not a valid ObjectID`)
     }
@@ -74,11 +28,9 @@ const ruleDelete = wrap(async (req, res) => {
 
     // Check if the rule exists
     const rulesFound = await find(RULES_COLLECTION_NAME, { _id: id })
-    green('rulesFound', rulesFound)
 
     // Find docs from data collection that have the rule._id
     const dataFound = await find(TRANSACTIONS_COLLECTION_NAME, { ruleIds: id })
-    green('dataFound', dataFound)
 
     const newDataDocs = dataFound.map(doc => {
       const { origDescription, ruleIds } = doc
@@ -98,18 +50,15 @@ const ruleDelete = wrap(async (req, res) => {
       }
     })
 
-    green('newDataDocs', newDataDocs)
 
     for (let i = 0; i < newDataDocs.length; i++) {
       const doc = newDataDocs[i]
       const { _id } = doc
       const foar = findOneAndReplace(TRANSACTIONS_COLLECTION_NAME, { _id }, doc)
-      green(`${i}.${foar}`)
     }
 
     // delete the rule
     const foad = await findOneAndDelete(RULES_COLLECTION_NAME, { _id: id })
-    green('delete rule result', foad)
 
     // return rules
     await runRules()
@@ -117,8 +66,6 @@ const ruleDelete = wrap(async (req, res) => {
     res.send({ value: 'test' })
 
   } catch (e) {
-    // redf('ruleDelete ERROR', e.message)
-    // console.log(e)
     throw e
   }
 })

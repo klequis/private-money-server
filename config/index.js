@@ -73,9 +73,7 @@ const setNodeEnv = env => {
   if (env) {
     return env
   } else if (process.env.NODE_ENV) {
-    // green('env', env)
     const ret = process.env.NODE_ENV
-    // green('setNodeEnv: ret', ret)
     return ret
   } else {
     return PROD
@@ -84,7 +82,6 @@ const setNodeEnv = env => {
 
 const config = env => {
   const _env = setNodeEnv(env)
-  // green('config: _env', _env)
   const envExists = [TEST_LOCAL, DEV, PROD].findIndex(i => i === _env)
 
   if (!(envExists >= 0)) {

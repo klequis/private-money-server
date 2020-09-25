@@ -9,26 +9,20 @@ import { LOG_FILTER } from 'global-constants'
 import { blue, green, greenf, redf, yellow } from 'logger'
 
 const operationBeginsWith = (field, value) => {
-  // return { [field]: { $regex: `^${value}`, $options: 'im' } }
-  // AMZN MKTP US\*MN5TE1R51 AMAMZN.COM\/BILLWA
-  // const regEx = new RegExp(`^${value}`, 'im')
   const escapedStr = escapeStringRegexp(value)
   return { [field]: new RegExp(`^${escapedStr}`, 'im') }
 }
 
 const operationContains = (field, value) => {
-  // return { [field]: { $regex: `${value}`, $options: 'im' } }
   const escapedStr = escapeStringRegexp(value)
   return { [field]: new RegExp(`${escapedStr}`, 'im') }
 }
 
 const operationEquals = (field, value) => {
   return { [field]: { $eq: value } }
-  // return { [field]: { $eq: value } }
 }
 
 const operationRegex = (field, value) => {
-  // return { [field]: { $regex: `${value}`, $options: 'im' } }
   const escapedStr = escapeStringRegexp(value)
   return { [field]: new RegExp(escapedStr, 'im') }
 }
@@ -63,7 +57,7 @@ export const conditionBuilder = (criterion) => {
       : origField
 
   LOG_FILTER && yellow('operation', operation)
-  
+
   switch (operation) {
     case operators.beginsWith.name:
       return operationBeginsWith(field, value)

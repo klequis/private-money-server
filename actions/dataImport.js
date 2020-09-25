@@ -1,5 +1,4 @@
 import {
-  createCollection,
   createIndex,
   dropCollection,
   find,
@@ -43,17 +42,13 @@ const readCsvFile = async (file, hasHeaders) => {
 
 const removeDoubleSpace = (value) => value.replace(/\s{2,}/g, ' ').trim()
 const toIsoString = (value) => {
-  // yellow('value', value)
   const newValue = new Date(value).toISOString()
-  // yellow('newValue', newValue)
   return newValue
-  // value.toISOString()
 }
 
 const evolver = {
   description: R.pipe(removeDoubleSpace, R.trim),
   origDescription: R.pipe(removeDoubleSpace, R.trim),
-  // date: R.identity,
   date: toIsoString,
   credit: R.pipe(
     R.cond([
@@ -128,16 +123,8 @@ const _transformData = (account, data) => {
     }
 
     const transform = R.compose(
-      // R.tap(_log('end')),
-      // there is a flag in the db called swapCreditDebitCols
-      // which is not being used and no routine for it has been written
-      // R.tap(_log('after evolve')),
       R.evolve(evolver),
-      // R.tap(_log('after map')),
       mapToFields
-      // R.tap(_log('after swap')),
-      // R.tap(_log('initial')),
-      // R.tap(_log('start'))
     )
     return R.map(transform, data)
   } catch (e) {
@@ -152,7 +139,6 @@ const dataImport = async (loadRaw = false) => {
   try {
     let docsInserted = 0
     await dropCollection(TRANSACTIONS_COLLECTION_NAME)
-    // await createCollection(TRANSACTIONS_COLLECTION_NAME, { validator: validator })
     if (loadRaw) {
       await dropCollection('data-all')
     }
@@ -161,7 +147,6 @@ const dataImport = async (loadRaw = false) => {
     })
 
     for (let i = 0; i < accounts.length; i++) {
-      // if (accounts[i].dataFile.name === 'cb.amazon.history.csv') {
       const { name: dataFileName, hasHeaders } = accounts[i].dataFile
       const dataFileHasHeaders = hasHeaders === false ? hasHeaders : true
       const rawData = await readCsvFile(dataFileName, dataFileHasHeaders)
@@ -180,7 +165,6 @@ const dataImport = async (loadRaw = false) => {
       collation: { caseLevel: true, locale: 'en_US' }
     })
     await runRules()
-    // green('Number of docs imported', docsInserted)
     return JSON.stringify([
       {
         operation: 'load data',
@@ -196,59 +180,3 @@ const dataImport = async (loadRaw = false) => {
 }
 
 export default dataImport
-
-
-/*
-const validator = {
-  bsonType: 'object',
-  $jsonSchema: {
-    required: [
-      dataFields.acctId.name,
-      // dataFields.date.name,
-      // dataFields.description.name,
-      // dataFields.origDescription.name,
-      // dataFields.credit.name,
-      // dataFields.debit.name,
-      // dataFields.category1.name,
-      // dataFields.category2.name,
-      // dataFields.checkNumber.name,
-      // dataFields.type.name,
-      dataFields.omit.name
-    ],
-
-    properties: {
-      [dataFields.acctId.name]: {
-        bsonType: 'string'
-      }
-      // [dataFields.date.name]: {
-      //   bsonType: 'date'
-      // },
-      // [dataFields.description.name]: {
-      //   bsonType: 'string'
-      // },
-      // [dataFields.origDescription.name]: {
-      //   bsonType: 'string'
-      // },
-      // [dataFields.credit.name]: {
-      //   bsonType: 'double'
-      // }
-      // [dataFields.debit.name]: {
-      //   bsonType: 'double'
-      // },
-      // [dataFields.checkNumber.name]: {
-      //   bsonType: 'string'
-      // },
-      // [dataFields.type.name]: {
-      //   bsonType: 'string'
-      // },
-      // [dataFields.omit.name]: {
-      //   bsonType: 'bool'
-      // },
-      // [dataFields.ruleIds.name]: {
-      //   bsonType: 'array'
-      // }
-    }
-  }
-}
-
-*/

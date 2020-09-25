@@ -8,9 +8,6 @@ import { red, green, yellow, logRequest } from 'logger'
 const rulesGet = wrap(async (req, res) => {
   try {
     const f = await find(RULES_COLLECTION_NAME, {})
-    // f.forEach(r => {
-    //   const { criteria } = r
-    // })
     res.send(f)
   } catch (e) {
     throw e

@@ -4,7 +4,7 @@ import { TRANSACTIONS_COLLECTION_NAME, duplicateStatus } from 'db/constants'
 import * as R from 'ramda'
 import { ObjectID } from 'mongodb'
 
-// eslint-disable-next-line
+// @ts-ignore
 import { red, green, yellow, logRequest, _log } from 'logger'
 
 const checkNewDuplicates = wrap(async (req, res) => {
@@ -61,15 +61,8 @@ const checkNewDuplicates = wrap(async (req, res) => {
   )
 
   const asObj = R.map(toArrayOfIds, ret)
-  // yellow('asObj', asObj)
 
   const flat = R.flatten(asObj)
-  // yellow('flat', flat)
-  // yellow('type', typeof flat[0])
-
-  // const idsToUpdate = R.map(x => new ObjectID(), flat)
-
-  // yellow('idsToUpdate', idsToUpdate)
 
   const um = await updateMany(
     TRANSACTIONS_COLLECTION_NAME,

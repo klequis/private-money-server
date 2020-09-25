@@ -51,7 +51,6 @@ const connectDB = async () => {
     return { db: client.db(cfg.dbName) }
   } catch (e) {
     throw new Error(e)
-    // throw new Error('Unable to connect to MongoDB')
   }
 }
 
@@ -63,14 +62,11 @@ export const close = async () => {
 }
 
 export const findOneAndReplace = async (collection, filter, replacement) => {
-  // green('filter', filter)  
-  // green('replacement', replacement)
   try {
     const { db } = await connectDB()
     const r = await db
       .collection(collection)
       .findOneAndReplace(filter, replacement)
-    // green('r', r)
     return r.ops
   } catch (e) {
     throw new Error(e.message)
@@ -217,7 +213,6 @@ export const findById = async (collection, id, projection = {}) => {
  */
 export const findOneAndDelete = async (collection, filter) => {
   try {
-    // const f = idStringToObjectID(filter)
     const { db } = await connectDB()
 
     const r = await db.collection(collection).findOneAndDelete(filter)
@@ -235,11 +230,9 @@ export const findOneAndDelete = async (collection, filter) => {
 }
 
 export const deleteMany = async (collection, filter) => {
-  // green('deleteMany: filter', filter)
   try {
     const { db } = await connectDB()
     const r = await db.collection(collection).deleteMany(filter)
-    // green('deleteMany: r.deletedCount', r.deletedCount)
     return r.deletedCount
   } catch (e) {
     throw new Error(e.message)

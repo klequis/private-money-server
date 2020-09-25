@@ -13,33 +13,8 @@ import { find, findOneAndReplace } from 'db/dbFunctions'
 import { mergeRight } from 'ramda'
 
 // @ts-ignore
-// eslint-disable-next-line
 import { red, redf, green, yellow, logRequest } from 'logger'
 import { ObjectID } from 'mongodb'
-
-// const omit = inputAction => {
-//   const { action } = inputAction
-//   // return { _id: new ObjectID(), action: 'omit' }
-//   return mergeRight(inputAction, { _id: new ObjectID() })
-// }
-
-// const strip = inputAction => {
-//   const { action, field, findValue, numAdditionalChars } = inputAction
-//   return {
-//     _id: new ObjectID(),
-//     action: action,
-//     field: field,
-//     findValue: findValue,
-//     numAdditionalChars: numAdditionalChars
-//   }
-// }
-
-// const categorize = inputAction => {
-//   const { action, category1, category2 } = inputAction
-//   return {
-//     _id: new Object()
-//   }
-// }
 
 const addId = wrap(async (req, res) => {
   try {
@@ -47,14 +22,6 @@ const addId = wrap(async (req, res) => {
 
     f.forEach(doc => {
       const { _id, criteria, actions, acct } = doc
-      // const { field, operation, value } = criteria
-      // const newCriteria = criteria.map(c => ({
-      //   _id: new ObjectID(),
-      //   field: field,
-      //   operation: operation,
-      //   value: value
-      // }))
-
       const newCriteria = criteria.map(c =>
         mergeRight(c, { _id: new ObjectID() })
       )
@@ -67,7 +34,6 @@ const addId = wrap(async (req, res) => {
         RULES_COLLECTION_NAME,
         { _id: _id },
         {
-          // _id: _id,
           acctId: acct,
           criteria: newCriteria,
           actions: newActions
@@ -77,9 +43,6 @@ const addId = wrap(async (req, res) => {
     res.send('success')
   } catch (e) {
     throw e
-    // redf('addIn ERROR', e.message)
-    // console.log(e)
-    // res.send('failure')
   }
 })
 

@@ -1,9 +1,9 @@
 import wrap from 'routes/wrap'
-import { executeAggregate, find } from 'db/dbFunctions'
+import { executeAggregate } from 'db/dbFunctions'
 import { TRANSACTIONS_COLLECTION_NAME, convertFieldValuesToUi } from 'db/constants'
 import * as R from 'ramda'
 
-// eslint-disable-next-line
+// @ts-ignore
 import { redf, yellow } from 'logger'
 
 const match1 = {

@@ -56,7 +56,6 @@ const check = R.pipe(
 )
 
 const criteriaValidation = (criteria) => {
-  // yellow('criteriaTest.validation: criteria', criteria)
   const _is = R.filter((e) => e.errors.length > 0)(R.map(check, criteria))
   return _is
 }

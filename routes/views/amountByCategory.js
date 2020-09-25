@@ -2,21 +2,13 @@ import wrap from 'routes/wrap'
 import { executeAggregate } from 'db/dbFunctions'
 import { TRANSACTIONS_COLLECTION_NAME } from 'db/constants'
 
-// eslint-disable-next-line
+// @ts-ignore
 import { red, green, yellow, logRequest } from 'logger'
 
 const amountByCategory = wrap(async (req, res) => {
-  // const f = await find(TRANSACTIONS_COLLECTION_NAME, {})
   const match1 = {
     $match: { omit: false }
   }
-  // const addFields = {
-  //   $addFields: {
-  //     amount: {
-  //       $cond: { if: { $gt: ['$credit', 0] }, then: '$credit', else: '$debit' }
-  //     }
-  //   }
-  // }
 
   const addFields = {
     $addFields: {

@@ -2,7 +2,7 @@ import wrap from 'routes/wrap'
 import { findById } from 'db/dbFunctions'
 import { RULES_COLLECTION_NAME, convertFieldValuesToUi } from 'db/constants'
 
-// eslint-disable-next-line
+// @ts-ignore
 import { red, green, yellow, logRequest } from 'logger'
 
 const ruleGet = wrap(async (req, res) => {

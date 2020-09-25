@@ -3,7 +3,7 @@ import { executeAggregate } from 'db/dbFunctions'
 import { TRANSACTIONS_COLLECTION_NAME /*, RULES_COLLECTION_NAME */ } from 'db/constants'
 import { sortBy, compose, toLower, prop } from 'ramda'
 
-// eslint-disable-next-line
+// @ts-ignore
 import { red, green, logRequest, yellow } from 'logger'
 
 // const sortByNameCaseInsensitive = sortBy(compose(toLower, prop('name')))
