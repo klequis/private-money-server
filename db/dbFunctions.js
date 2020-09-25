@@ -1,3 +1,4 @@
+// @ts-nocheck
 import mongodb, { ObjectID } from 'mongodb'
 import { hasProp } from 'lib'
 import config from 'config'
@@ -39,7 +40,6 @@ const idStringToObjectID = obj => {
 }
 
 const cfg = config()
-
 const connectDB = async () => {
   try {
     if (!client) {
@@ -108,9 +108,9 @@ export const insertMany = async (collection, data) => {
 export const dropCollection = async collection => {
   try {
     const { db } = await connectDB()
-    
+
     return await db.collection(collection).drop()
-    
+
   } catch (e) {
     if (e.message === 'ns not found') {
       return true
@@ -155,7 +155,7 @@ export const find = async (
 ) => {
   try {
     const { db } = await connectDB()
-    
+
     const ret = await db
       .collection(collection)
       .find(filter)
@@ -164,7 +164,7 @@ export const find = async (
       .toArray()
     return ret
   } catch (e) {
-    
+
     throw new DatabaseError(e)
   }
 }
@@ -182,7 +182,7 @@ export const findOne = async (collection, filter = {}, projection = {}) => {
   try {
     const { db } = await connectDB()
     return await db.collection(collection).findOne(f, { projection })
-    
+
   } catch (e) {
     throw new Error(e.message)
   }

@@ -101,7 +101,7 @@ const error = (err, req, res, next) => {
   }
 
   res.status(status)
-
+  red('server.error: msg', retMsg !== null ? retMsg : msg)
   res.send({ data: null, error: retMsg !== null ? retMsg : msg})
 }
 
