@@ -7,7 +7,7 @@ import {
 import {
   ACCOUNTS_COLLECTION_NAME,
   TRANSACTIONS_COLLECTION_NAME,
-  dataFields
+  transactionFields as tFields
 } from 'db/constants'
 import csv from 'csvtojson'
 import R, { isNil } from 'ramda'
@@ -97,26 +97,28 @@ const getFieldValue = (fieldCol) => (doc) => {
 
 const _transformData = (account, data) => {
   const { fieldToCol, acctId } = account
-
+  // console.log('fieldToCol', fieldToCol)
+  console.log('acctId', acctId);
   try {
     const mapToFields = (doc) => {
+      red('doc', doc)
       const ret = {
         acctId,
-        date: getFieldValue(R.prop(dataFields.date.name)(fieldToCol))(doc),
+        date: getFieldValue(R.prop(tFields.date.name)(fieldToCol))(doc),
         description: getFieldValue(
-          R.prop(dataFields.description.name)(fieldToCol)
+          R.prop(tFields.description.name)(fieldToCol)
         )(doc),
         origDescription: getFieldValue(
-          R.prop(dataFields.description.name)(fieldToCol)
+          R.prop(tFields.description.name)(fieldToCol)
         )(doc),
-        credit: getFieldValue(R.prop(dataFields.credit.name)(fieldToCol))(doc),
-        debit: getFieldValue(R.prop(dataFields.debit.name)(fieldToCol))(doc),
+        credit: getFieldValue(R.prop(tFields.credit.name)(fieldToCol))(doc),
+        debit: getFieldValue(R.prop(tFields.debit.name)(fieldToCol))(doc),
         category1: 'none',
         category2: '',
-        checkNumber: getFieldValue(R.prop(dataFields.checkNumber)(fieldToCol))(
+        checkNumber: getFieldValue(R.prop(tFields.checkNumber)(fieldToCol))(
           doc
         ),
-        type: getFieldValue(R.prop(dataFields.type.name.name)(fieldToCol))(doc),
+        type: getFieldValue(R.prop(tFields.type.name.name)(fieldToCol))(doc),
         omit: false
       }
       return ret
@@ -128,7 +130,7 @@ const _transformData = (account, data) => {
     )
     return R.map(transform, data)
   } catch (e) {
-    red(dataFields.acctId.name, acctId)
+    red(tFields.acctId.name, acctId)
     red('ftc', fieldToCol)
     redf('_transformDataNew ERROR', e.message)
     console.log(e)
@@ -150,18 +152,20 @@ const dataImport = async (loadRaw = false) => {
       const { name: dataFileName, hasHeaders } = accounts[i].dataFile
       const dataFileHasHeaders = hasHeaders === false ? hasHeaders : true
       const rawData = await readCsvFile(dataFileName, dataFileHasHeaders)
+      
       if (loadRaw) {
         await insertMany('raw-data', rawData)
       }
+      red('1. **********************')
       const transformedData = _transformData(accounts[i], rawData)
       const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, transformedData)
       docsInserted += inserted.length
       // }
     }
-    await createIndex(TRANSACTIONS_COLLECTION_NAME, dataFields.description.name, {
+    await createIndex(TRANSACTIONS_COLLECTION_NAME, tFields.description.name, {
       collation: { caseLevel: true, locale: 'en_US' }
     })
-    await createIndex(TRANSACTIONS_COLLECTION_NAME, dataFields.type.name, {
+    await createIndex(TRANSACTIONS_COLLECTION_NAME, tFields.type.name, {
       collation: { caseLevel: true, locale: 'en_US' }
     })
     await runRules()

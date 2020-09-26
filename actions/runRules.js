@@ -2,7 +2,7 @@ import { find, updateMany, findOneAndUpdate } from 'db'
 import {
   TRANSACTIONS_COLLECTION_NAME,
   RULES_COLLECTION_NAME,
-  dataFields,
+  transactionFields as tFields,
   actionTypes
 } from 'db/constants'
 import { filterBuilder } from 'actions/filterBuilder'
@@ -33,7 +33,7 @@ const createRegex = (findValue, numAdditionalChars = 0) => {
 
 const createCategorizeUpdate = (action, rule) => {
   let update
-  if (R.has(dataFields.category2.name)(action)) {
+  if (R.has(tFields.category2.name)(action)) {
     update = {
       $set: {
         category1: action.category1,

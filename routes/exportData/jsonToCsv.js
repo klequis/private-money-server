@@ -1,5 +1,5 @@
 import { find } from 'db'
-import { TRANSACTIONS_COLLECTION_NAME, dataFields } from 'db/constants'
+import { TRANSACTIONS_COLLECTION_NAME, transactionFields as tFields } from 'db/constants'
 import fs from 'fs'
 import * as R from 'ramda'
 
@@ -9,18 +9,18 @@ import { yellow, redf } from 'logger'
 const jsonToCsv = (json) => {
   const replacer = (key, value) => (value === null ? '' : value) // specify how you want to handle null values here
   const header = [
-    dataFields.acctId.name,
-    dataFields.date.name,
-    dataFields.description.name,
-    dataFields.debit.name,
-    dataFields.credit.name,
-    dataFields.amount.name,
-    dataFields.category1.name,
-    dataFields.category2.name,
-    dataFields.checkNumber.name,
-    dataFields.origDescription.name,
-    dataFields.type.name,
-    dataFields.omit.name,
+    tFields.acctId.name,
+    tFields.date.name,
+    tFields.description.name,
+    tFields.debit.name,
+    tFields.credit.name,
+    tFields.amount.name,
+    tFields.category1.name,
+    tFields.category2.name,
+    tFields.checkNumber.name,
+    tFields.origDescription.name,
+    tFields.type.name,
+    tFields.omit.name,
     '_id'
   ]
 
