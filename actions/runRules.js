@@ -81,6 +81,11 @@ const createOmitUpdate = (rule) => {
   return update
 }
 
+/**
+ * 
+ * @param {object} passedInRules Optional rule. 
+ * @description If passedInRules.length === 0 runs all rules. Otherwise runs passed in rulles
+ */
 const runRules = async (passedInRules = []) => {
   let rules
   if (passedInRules.length !== 0) {
@@ -106,7 +111,7 @@ const runRules = async (passedInRules = []) => {
     const f = await find(TRANSACTIONS_COLLECTION_NAME, filter)
     for (let j = 0; j < actions.length; j++) {
       const action = actions[j]
-
+      // green('action', action)
       switch (action.actionType) {
         case actionTypes.omit:
           const omitUpdate = createOmitUpdate(rule)

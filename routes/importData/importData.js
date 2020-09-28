@@ -5,7 +5,7 @@ import dataImport from 'actions/dataImport'
 import { green, yellow } from 'logger'
 
 const importData = wrap(async (req, res, next) => {
-  const ld = await dataImport(true)
+  const ld = await dataImport()
   res.send(JSON.stringify({ dataLoaded: ld }))
 })
 
