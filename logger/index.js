@@ -14,31 +14,31 @@ const checkValue = (value) => {
 
 
 
-export const red = message => value => {
+export const red = R.curry((message, value) => {
   log(chalk.bgRed(` ${message} `), checkValue(value))
-}
-export const green = message => value => {
-  log(chalk.bgGreen(` ${message} `), checkValue(value))
-}
-export const yellow = message => value => {
-  log(chalk.bgYellow(chalk.black(` ${message} `)), checkValue(value))
-}
-export const blue = message => value => {
-  log(chalk.bgBlue(` ${message} `), checkValue(value))
-}
+})
 
-export const redf = message => value => {
+export const green = R.curry((message, value) => {
+  log(chalk.bgGreen(` ${message} `), checkValue(value))
+})
+export const yellow = R.curry((message, value) => {
+  log(chalk.bgYellow(chalk.black(` ${message} `)), checkValue(value))
+})
+export const blue = R.curry((message, value) => {
+  log(chalk.bgBlue(` ${message} `), checkValue(value))
+})
+export const redf = R.curry((message, value) => {
   log(chalk.red(`${message}`), checkValue(value))
-}
-export const greenf = message => value => {
+})
+export const greenf = R.curry((message, value) => {
   log(chalk.green(`${message}`), checkValue(value))
-}
-export const yellowf = message => value => {
+})
+export const yellowf = R.curry((message, value) => {
   log(chalk.yellow(`${message}`), checkValue(value))
-}
-export const bluef = message => value => {
+})
+export const bluef = R.curry((message, value) => {
   log(chalk.blue(`${message}`), checkValue(value))
-}
+})
 
 export const logResponse = (res) => {
   console.log('******************')

@@ -1,6 +1,7 @@
 import wrap from 'routes/wrap'
-import dataImport from 'actions/dataImport'
+import dataImport from './dataImport'
 
+// @ts-ignore
 // eslint-disable-next-line
 import { green, yellow } from 'logger'
 
