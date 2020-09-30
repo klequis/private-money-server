@@ -58,7 +58,7 @@ export const transactionFields = {
   },
   checkNumber: {
     name: 'checkNumber',
-    type: dataTypes.String
+    type: dataTypes.Any
   },
   credit: {
     name: 'credit',

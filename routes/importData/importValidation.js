@@ -1,7 +1,7 @@
 import { transactionFields as tFields } from 'db/constants'
 import R from 'ramda'
 import { isDate } from 'date-fns'
-import { isDebitOrCredit } from './isDebitOrCredit'
+import dataTypes from 'db/dataTypes'
 
 // eslint-disable-next-line
 import { yellow, green, redf } from 'logger'
@@ -19,8 +19,11 @@ const isDateType = (value) => isDate(new Date(value))
  *              'type' & 'checkNumber' fields are optional
  */
 export const checkField = (fieldName, fieldValue) => {
-
+    
     const expectedType = tFields[fieldName].type
+    if (expectedType === dataTypes.Any) {
+        return { good: true, error: null }
+    }
     const receivedType = fieldName === tFields.date.name
         ? isDateType(fieldValue)
         : R.type(fieldValue)

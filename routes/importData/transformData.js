@@ -8,10 +8,14 @@ import { isDebitOrCredit } from './isDebitOrCredit'
 // eslint-disable-next-line
 import { green, red, redf, yellow } from 'logger'
 
-const removeDoubleSpace = (value) => value.replace(/\s{2,}/g, ' ').trim()
-const toIsoString = (value) => {
-    const newValue = new Date(value).toISOString()
-    return newValue
+const _removeDoubleSpace = (value) => value.replace(/\s{2,}/g, ' ').trim()
+const _toIsoString = (value) => {
+    try {
+        const newValue = new Date(value).toISOString()
+        return newValue
+    } catch (e) {
+        red('_toIsoString Error:', `value=${value}`)
+    }
 }
 
 const _stripDollarSign = (value) => {
@@ -21,7 +25,7 @@ const _stripDollarSign = (value) => {
     return value
 }
 
-const logDataError = (msg, fieldName, account, doc) => {
+const _logDataError = (msg, fieldName, account, doc) => {
     const { acctId } = account
     console.group('logDataError')
     red('error', msg)
@@ -31,11 +35,11 @@ const logDataError = (msg, fieldName, account, doc) => {
     console.groupEnd()
 }
 
-const replaceEmptyStringWithZero = (value) => {
+const _replaceEmptyStringWithZero = (value) => {
     return R.isEmpty(value) ? 0 : value
 }
 
-const getFieldValue = R.curry((fieldName, account, doc) => {
+const _getFieldValue = R.curry((fieldName, account, doc) => {
 
     const { acctId, colMap, hasAmountField } = account
 
@@ -59,7 +63,7 @@ const getFieldValue = R.curry((fieldName, account, doc) => {
     const rawValue = R.prop(`field${colNum}`)(doc)
     let finalValue
     if (isDebitOrCredit(fieldName)) {
-        finalValue = replaceEmptyStringWithZero(rawValue)
+        finalValue = _replaceEmptyStringWithZero(rawValue)
     } else {
         finalValue = rawValue
     }
@@ -67,7 +71,7 @@ const getFieldValue = R.curry((fieldName, account, doc) => {
     const { good, error } = checkField(fieldName, finalValue)
 
     if (!good) {
-        logDataError(error, fieldName, account, doc)
+        _logDataError(error, fieldName, account, doc)
     }
     return finalValue
 })
@@ -80,36 +84,39 @@ export const _transformData = (account, data) => {
             acctId,
 
             date: R.pipe(
-                getFieldValue,
-                toIsoString
+                _getFieldValue,
+                _toIsoString
                 // @ts-ignore
             )(tFields.date.name, account, doc),
             description: R.pipe(
-                getFieldValue,
-                removeDoubleSpace,
+                _getFieldValue,
+                _removeDoubleSpace,
                 R.trim
                 // @ts-ignore
             )(tFields.description.name, account, doc),
             origDescription: R.pipe(
-                getFieldValue,
-                removeDoubleSpace,
+                _getFieldValue,
+                _removeDoubleSpace,
                 R.trim
                 // @ts-ignore
             )(tFields.description.name, account, doc),
             credit: R.pipe(
-                getFieldValue,
+                _getFieldValue,
                 _stripDollarSign,
                 // @ts-ignore
             )(tFields.credit.name, account, doc),
             debit: R.pipe(
-                getFieldValue,
+                _getFieldValue,
                 _stripDollarSign
                 // @ts-ignore
             )(tFields.debit.name, account, doc),
             category1: 'none',
             category2: '',
-            checkNumber: getFieldValue(tFields.checkNumber.name, account, doc),
-            type: getFieldValue(tFields.type.name, account, doc),
+            checkNumber: R.pipe(
+                _getFieldValue,
+                // @ts-ignore
+            )(tFields.checkNumber.name, account, doc),
+            type: _getFieldValue(tFields.type.name, account, doc),
             omit: false
         }
         return ret
