@@ -1,13 +1,13 @@
 import wrap from 'routes/wrap'
-import writeToCsvFile from './jsonToCsv'
+import transactionsToCsv from './transactionsToCsv'
 
+// @ts-ignore
 // eslint-disable-next-line
 import { red, green, yellow } from 'logger'
 
-const exportData = wrap(async (req, res, next) => {
+const exportTransactions = wrap(async (req, res, next) => {
   try {
-    const ret = await writeToCsvFile()
-    // yellow('ret', ret)
+    const ret = await transactionsToCsv()
     res.send(JSON.stringify({ status: 'success', fileName: ret.fileName, rows: ret.rows }))
   } catch (e) {
     red('exportData ERROR', e.message)
@@ -18,4 +18,4 @@ const exportData = wrap(async (req, res, next) => {
   }
 })
 
-export default exportData
+export default exportTransactions

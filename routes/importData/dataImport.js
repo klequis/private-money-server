@@ -44,9 +44,9 @@ const readCsvFile = async (file, hasHeaders) => {
 
 const dropDatabases = async (loadRaw) => {
   await dropCollection(TRANSACTIONS_COLLECTION_NAME)
-  if (loadRaw) {
+  // if (loadRaw) {
     await dropCollection('raw-data')
-  }
+  // }
 }
 
 const getAccounts = async () => {
@@ -55,8 +55,15 @@ const getAccounts = async () => {
   })
 }
 
-const loadRawData = async (rawData) => {
-  await insertMany('raw-data', rawData)
+/**
+ * 
+ * @param {string} acctId 
+ * @param {array} rawData 
+ */
+const loadRawData = async (acctId, rawData) => {
+  const data = R.map(doc => R.mergeRight(doc, { acctId }), rawData)
+  console.log('data', data)
+  await insertMany('raw-data', data)
 }
 
 // const getRawData = 
@@ -112,12 +119,12 @@ const dataImport = async () => {
     for (let i = 0; i < accounts.length; i++) {
       const account = accounts[i]
 
-      const { dataFilename, hasHeaders } = accounts[i]
+      const { acctId, dataFilename, hasHeaders } = accounts[i]
 
       // if (accounts[i].acctId === 'sb.citi.costco-visa.2791') {
       console.group(`account: ${accounts[i].acctId}`)
       const rawData = await readCsvFile(dataFilename, hasHeaders)
-      loadRawData(rawData)
+      loadRawData(acctId, rawData)
 
       const transformedData = _transformData(account, rawData)
       

@@ -89,7 +89,7 @@ const addDiff = (doc) => {
   return ret
 }
 
-const writeCsvFile = async () => {
+const transactionsToCsv = async () => {
   try {
     const data = await find(TRANSACTIONS_COLLECTION_NAME, { omit: false })
     const a = R.map(addDiff, data)
@@ -103,4 +103,4 @@ const writeCsvFile = async () => {
   }
 }
 
-export default writeCsvFile
+export default transactionsToCsv
