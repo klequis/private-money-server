@@ -39,9 +39,45 @@ const _replaceEmptyStringWithZero = (value) => {
     return R.isEmpty(value) ? 0 : value
 }
 
-const _getFieldValue = R.curry((fieldName, account, doc) => {
+/**
+ * 
+ * @param {string} fieldName possible values debit || credit
+ * @param {number} fieldValue
+ * @return {number}
+ * @summary Used for source files that have credits & debits in a signle 'amount' column
+ */
+const _getValueHasAmountTrue = (fieldName, fieldValue) => {
+    // has
+    if (fieldName === tFields.credit.name) {
+        return fieldValue > 0 ? fieldValue : 0
+    }
+    if (fieldName = tFields.debit.name) {
+        return fieldValue < 0 ? fieldValue : 0
+    }
+    throw new Error(`
+        _getValueHasAmountTrue: Valid values for fieldName are 'credit or 'debit',
+        but received ${fieldName}.
+    `)
+}
 
-    const { acctId, colMap, hasAmountField } = account
+/**
+ * @param {boolean} reverseSignAmount Should fieldValue's sign be reversed or not
+ * @param {number} fieldValue
+ * @returns {number}
+ * @summary Used for source files that have credits & debits in separate column. 
+ * 
+ */
+const _getValueHasAmountFalse = (reverseSignAmount, fieldValue) => {
+    // if receive empty string return 0
+    if (R.isEmpty(fieldValue)) {
+        return 0
+    }
+    // reverse sign or don't
+    return reverseSignAmount ? fieldValue * -1 : fieldValue
+}
+
+const _getFieldValue = R.curry((fieldName, account, doc) => {
+    const { acctId, colMap, hasAmountField, reverseSignAmount } = account
 
     if (!R.has('amountField')(account)) {
         red(`Account ${acctId} is missing field 'hasAmountField'`)
@@ -60,19 +96,24 @@ const _getFieldValue = R.curry((fieldName, account, doc) => {
         red(`acctId: ${acctId}: '${colNum} is not a valid value for colMap' field ${fieldName} has in for account ${acctId} is missing a mapping for field ${fieldName}`)
     }
 
+
     const rawValue = R.prop(`field${colNum}`)(doc)
-    let finalValue
-    if (isDebitOrCredit(fieldName)) {
-        finalValue = _replaceEmptyStringWithZero(rawValue)
-    } else {
-        finalValue = rawValue
-    }
+
+
+    const finalValue = hasAmountField 
+        ? _getValueHasAmountTrue(fieldName, rawValue)
+        : _getValueHasAmountFalse(reverseSignAmount, rawValue)
+
 
     const { good, error } = checkField(fieldName, finalValue)
 
     if (!good) {
         _logDataError(error, fieldName, account, doc)
     }
+
+
+
+
     return finalValue
 })
 

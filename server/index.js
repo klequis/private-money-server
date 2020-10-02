@@ -76,7 +76,11 @@ const error = (err, req, res, next) => {
   let status
   const msg = err.message.toLowerCase()
   let retMsg = null
+  if (msg.includes('favicon')) {
+    return
+  }
   red('server.error: msg-in', msg)
+  
 
   if (msg === 'no authorization token was found') {
     status = 401

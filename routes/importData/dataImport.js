@@ -17,6 +17,11 @@ import R from 'ramda'
 // eslint-disable-next-line
 import { green, red, redf, yellow } from 'logger'
 
+// tmp
+import { parse } from 'json2csv'
+
+// tmp
+
 const readCsvFile = async (file, hasHeaders) => {
   try {
     if (hasHeaders) {
@@ -45,7 +50,7 @@ const readCsvFile = async (file, hasHeaders) => {
 const dropDatabases = async (loadRaw) => {
   await dropCollection(TRANSACTIONS_COLLECTION_NAME)
   // if (loadRaw) {
-    await dropCollection('raw-data')
+  await dropCollection('raw-data')
   // }
 }
 
@@ -62,7 +67,6 @@ const getAccounts = async () => {
  */
 const loadRawData = async (acctId, rawData) => {
   const data = R.map(doc => R.mergeRight(doc, { acctId }), rawData)
-  console.log('data', data)
   await insertMany('raw-data', data)
 }
 
@@ -87,26 +91,26 @@ const accountCounts = (acctId) => {
       return 199
     case 'cb.chase.saphire.8567':
       return 24
-    case 'cb.chase.savings.2401': 
+    case 'cb.chase.savings.2401':
       return 23
-    case 'sb.chase.business-visa.4468': 
+    case 'sb.chase.business-visa.4468':
       return 17
-    case 'sb.chase.fredoom-visa.8820': 
+    case 'sb.chase.fredoom-visa.8820':
       return 114
-    case 'sb.citi.costco-visa.2791': 
+    case 'sb.citi.costco-visa.2791':
       return 1032
-    case 'sb.wells-farg.bu-market-rate-savings.09220': 
+    case 'sb.wells-farg.bu-market-rate-savings.09220':
       return 25
-    case 'sb.wells-fargo.checking.7795': 
+    case 'sb.wells-fargo.checking.7795':
       return 22
-    case 'sb.wells-fargo.custom-management.3761': 
+    case 'sb.wells-fargo.custom-management.3761':
       return 64
-    case 'sb.wells-fargo.way2save.6223': 
+    case 'sb.wells-fargo.way2save.6223':
       return 18
-    default: 
+    default:
       return `${acctId} not found`
   }
-  
+
 
 }
 
@@ -127,14 +131,16 @@ const dataImport = async () => {
       loadRawData(acctId, rawData)
 
       const transformedData = _transformData(account, rawData)
-      
+
 
       const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, transformedData)
-      green('rawData.length', rawData.length)
-      green('transformeData.length', transformedData.length)
-      green('inserted.length', inserted.length)
-      // R.equals([1, 2, 3], [1, 2, 3]);
 
+      // tmp
+      if (true) {
+        green('rawData.length', rawData.length)
+        green('transformeData.length', transformedData.length)
+        green('inserted.length', inserted.length)
+      }
       const rowLen = accountCounts(accounts[i].acctId)
       if (rawData.length !== rowLen) red(`rawData: expected ${rowLen} rows but found ${rawData.length}`)
       if (transformedData.length !== rowLen) red(`transformedData: Expected ${rowLen} rows but found ${rawData.length}`)
@@ -142,6 +148,9 @@ const dataImport = async () => {
       if (!R.equals([rawData.length, transformedData.length, inserted.length])) red(`row lengths do not match`)
       docsInserted += inserted.length
       console.groupEnd()
+      // tmp
+
+
     }
 
     // }
