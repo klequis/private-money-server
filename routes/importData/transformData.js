@@ -9,6 +9,7 @@ import { isDebitOrCredit } from './isDebitOrCredit'
 import { green, red, redf, yellow } from 'logger'
 
 const _removeDoubleSpace = (value) => value.replace(/\s{2,}/g, ' ').trim()
+
 const _toIsoString = (value) => {
     try {
         const newValue = new Date(value).toISOString()
@@ -33,10 +34,6 @@ const _logDataError = (msg, fieldName, account, doc) => {
     console.log('field', fieldName)
     console.log('doc', doc)
     console.groupEnd()
-}
-
-const _replaceEmptyStringWithZero = (value) => {
-    return R.isEmpty(value) ? 0 : value
 }
 
 /**
@@ -99,20 +96,21 @@ const _getFieldValue = R.curry((fieldName, account, doc) => {
 
     const rawValue = R.prop(`field${colNum}`)(doc)
 
+    let finalValue
 
-    const finalValue = hasAmountField 
-        ? _getValueHasAmountTrue(fieldName, rawValue)
-        : _getValueHasAmountFalse(reverseSignAmount, rawValue)
-
+    if (isDebitOrCredit(fieldName)) {
+        finalValue = hasAmountField
+            ? _getValueHasAmountTrue(fieldName, rawValue)
+            : _getValueHasAmountFalse(reverseSignAmount, rawValue)
+    } else {
+        finalValue = rawValue
+    }
 
     const { good, error } = checkField(fieldName, finalValue)
 
     if (!good) {
         _logDataError(error, fieldName, account, doc)
     }
-
-
-
 
     return finalValue
 })

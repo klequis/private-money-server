@@ -1,6 +1,5 @@
 // run with: nodemon --exec npx babel-node create-test-user.js todo-test
 
-
 import mongodb, { ObjectID } from 'mongodb'
 import chalk from 'chalk'
 

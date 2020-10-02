@@ -125,35 +125,35 @@ const dataImport = async () => {
 
       const { acctId, dataFilename, hasHeaders } = accounts[i]
 
-      // if (accounts[i].acctId === 'sb.citi.costco-visa.2791') {
-      console.group(`account: ${accounts[i].acctId}`)
-      const rawData = await readCsvFile(dataFilename, hasHeaders)
-      loadRawData(acctId, rawData)
+      //
+      // if (accounts[i].acctId === 'sb.citi.costco-visa.2791') { // if
+      //
 
-      const transformedData = _transformData(account, rawData)
+        console.group(`account: ${accounts[i].acctId}`)
+        const rawData = await readCsvFile(dataFilename, hasHeaders)
+        loadRawData(acctId, rawData)
+        const transformedData = _transformData(account, rawData)
+        const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, transformedData)
+        // tmp
+        if (true) {
+          green('rawData.length', rawData.length)
+          green('transformeData.length', transformedData.length)
+          green('inserted.length', inserted.length)
+        }
+        const rowLen = accountCounts(accounts[i].acctId)
+        if (rawData.length !== rowLen) red(`rawData: expected ${rowLen} rows but found ${rawData.length}`)
+        if (transformedData.length !== rowLen) red(`transformedData: Expected ${rowLen} rows but found ${rawData.length}`)
+        if (inserted.length !== rowLen) red(`inserted: expected ${rowLen} rows but found ${rawData.length}`)
+        if (!R.equals([rawData.length, transformedData.length, inserted.length])) red(`row lengths do not match`)
+        docsInserted += inserted.length
+        console.groupEnd()
+        // tmp
 
-
-      const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, transformedData)
-
-      // tmp
-      if (true) {
-        green('rawData.length', rawData.length)
-        green('transformeData.length', transformedData.length)
-        green('inserted.length', inserted.length)
-      }
-      const rowLen = accountCounts(accounts[i].acctId)
-      if (rawData.length !== rowLen) red(`rawData: expected ${rowLen} rows but found ${rawData.length}`)
-      if (transformedData.length !== rowLen) red(`transformedData: Expected ${rowLen} rows but found ${rawData.length}`)
-      if (inserted.length !== rowLen) red(`inserted: expected ${rowLen} rows but found ${rawData.length}`)
-      if (!R.equals([rawData.length, transformedData.length, inserted.length])) red(`row lengths do not match`)
-      docsInserted += inserted.length
-      console.groupEnd()
-      // tmp
-
+      //
+      // } // if
+      //
 
     }
-
-    // }
     await createIndices()
 
 

@@ -33,7 +33,6 @@ export const checkField = (fieldName, fieldValue) => {
         }
     }
 
-    console.log('---------------------------------------')   
     if (fieldName === tFields.credit.name && fieldValue < 0) {
         // blue('fieldName', fieldName)
         // blue('fieldValue', fieldValue)
