@@ -12,8 +12,8 @@ const jsonToCsv = (json) => {
     tFields.acctId.name,
     tFields.date.name,
     tFields.description.name,
-    tFields.debit.name,
-    tFields.credit.name,
+    // tFields.debit.name,
+    // tFields.credit.name,
     tFields.amount.name,
     tFields.category1.name,
     tFields.category2.name,
@@ -92,10 +92,10 @@ const addDiff = (doc) => {
 const transactionsToCsv = async () => {
   try {
     const data = await find(TRANSACTIONS_COLLECTION_NAME, { omit: false })
-    const a = R.map(addDiff, data)
-    const csvData = jsonToCsv(a)
+    // const a = R.map(addDiff, data)
+    const csvData = jsonToCsv(data)
     const fileName = await writeFile(csvData)
-    return { fileName, rows: a.length }
+    return { fileName, rows: data.length }
   } catch (e) {
     redf('writeCsvFile ERROR', e.message)
     console.log(e)

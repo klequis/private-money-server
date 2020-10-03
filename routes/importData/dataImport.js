@@ -126,7 +126,7 @@ const dataImport = async () => {
       const { acctId, dataFilename, hasHeaders } = accounts[i]
 
       //
-      // if (accounts[i].acctId === 'sb.citi.costco-visa.2791') { // if
+      if (accounts[i].acctId === 'sb.citi.costco-visa.2791') { // if
       //
 
         console.group(`account: ${accounts[i].acctId}`)
@@ -150,7 +150,7 @@ const dataImport = async () => {
         // tmp
 
       //
-      // } // if
+      } // if
       //
 
     }
