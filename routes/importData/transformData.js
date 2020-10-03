@@ -20,12 +20,12 @@ const _toIsoString = (value) => {
     }
 }
 
-const _stripDollarSign = (value) => {
-    if (R.type(value) === 'String' && value.startsWith('$')) {
-        return Number(value.slice(1))
-    }
-    return value
-}
+// const _stripDollarSign = (value) => {
+//     if (R.type(value) === 'String' && value.startsWith('$')) {
+//         return Number(value.slice(1))
+//     }
+//     return value
+// }
 
 const _logDataError = (msg, fieldName, account, doc) => {
     const { acctId } = account
