@@ -107,10 +107,12 @@ export const logActions = (callerName, actions) =>
   yellow(`${callerName}.actions`, actions)
 
 export const logFilter = (callerName, filter) => {
+  console.log('-------------------------------')
   if (R.has('$and')(filter)) {
     yellow('filter', filter)
     filter.$and.map((v) => console.log(v))
   } else {
     yellow(`${callerName}.filter`, filter)
   }
+  console.log('-------------------------------')
 }
