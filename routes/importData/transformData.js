@@ -240,7 +240,7 @@ export const _transformData = (account, data) => {
                 _getFieldValue,
                 // @ts-ignore
             )(tFields.amount.name, account, doc),
-            category1: 'none',
+            category1: '',
             category2: '',
             checkNumber: R.pipe(
                 _getFieldValue,
