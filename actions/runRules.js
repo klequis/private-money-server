@@ -87,6 +87,7 @@ const createOmitUpdate = (rule) => {
  * @description If passedInRules.length === 0 runs all rules. Otherwise runs passed in rulles
  */
 const runRules = async (passedInRules = []) => {
+  // TODO: use R.pipe for processing here
   let rules
   if (passedInRules.length !== 0) {
     rules = passedInRules
