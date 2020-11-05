@@ -27,9 +27,9 @@ const ruleDelete = wrap(async (req, res) => {
     const id = ObjectId.createFromHexString(ruleid)
 
     // Check if the rule exists
-    const rulesFound = await find(RULES_COLLECTION_NAME, { _id: id })
+    // const rulesFound = await find(RULES_COLLECTION_NAME, { _id: id })
 
-    // Find docs from data collection that have the rule._id
+    // Find docs from transactions collection that have the rule._id
     const dataFound = await find(TRANSACTIONS_COLLECTION_NAME, { ruleIds: id })
 
     const newDataDocs = dataFound.map(doc => {

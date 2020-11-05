@@ -23,7 +23,7 @@ import { logCriteria, logActions, logFilter, blue, green, greenf, redf, yellow }
 //   console.log('// filter')
 // }
 
-const createRegex = (findValue, numAdditionalChars = 0) => {
+const _createRegex = (findValue, numAdditionalChars = 0) => {
   const regExAsString =
     numAdditionalChars > 0
       ? `(${findValue}).{${numAdditionalChars}}`
@@ -31,7 +31,7 @@ const createRegex = (findValue, numAdditionalChars = 0) => {
   return new RegExp(regExAsString)
 }
 
-const createCategorizeUpdate = (action, rule) => {
+const _createCategorizeUpdate = (action, rule) => {
   let update
   if (R.has(tFields.category2.name)(action)) {
     update = {
@@ -50,7 +50,7 @@ const createCategorizeUpdate = (action, rule) => {
   return update
 }
 
-const createReplaceAllUpdate = (action, rule) => {
+const _createReplaceAllUpdate = (action, rule) => {
   const update = {
     $set: {
       [action.field]: action.replaceWithValue
@@ -60,9 +60,9 @@ const createReplaceAllUpdate = (action, rule) => {
   return update
 }
 
-const createStripUpdate = (action, doc, rule) => {
+const _createStripUpdate = (action, doc, rule) => {
   const { findValue, numAdditionalChars } = action
-  const regex = createRegex(findValue, numAdditionalChars)
+  const regex = _createRegex(findValue, numAdditionalChars)
   const update = {
     $set: {
       [action.field]: doc[action.field].replace(regex, '').trim(),
@@ -73,7 +73,7 @@ const createStripUpdate = (action, doc, rule) => {
   return update
 }
 
-const createOmitUpdate = (rule) => {
+const _createOmitUpdate = (rule) => {
   const update = {
     $set: { omit: true },
     $addToSet: { ruleIds: rule._id }
@@ -115,7 +115,7 @@ const runRules = async (passedInRules = []) => {
       // green('action', action)
       switch (action.actionType) {
         case actionTypes.omit:
-          const omitUpdate = createOmitUpdate(rule)
+          const omitUpdate = _createOmitUpdate(rule)
           await updateMany(TRANSACTIONS_COLLECTION_NAME, filter, omitUpdate)
           break
         case actionTypes.strip:
@@ -124,7 +124,7 @@ const runRules = async (passedInRules = []) => {
             await findOneAndUpdate(
               TRANSACTIONS_COLLECTION_NAME,
               { _id: doc._id },
-              createStripUpdate(action, doc, rule)
+              _createStripUpdate(action, doc, rule)
             )
           }
           break
@@ -134,7 +134,7 @@ const runRules = async (passedInRules = []) => {
             await findOneAndUpdate(
               TRANSACTIONS_COLLECTION_NAME,
               { _id: doc._id },
-              createReplaceAllUpdate(action, rule)
+              _createReplaceAllUpdate(action, rule)
             )
           }
           break
@@ -142,7 +142,7 @@ const runRules = async (passedInRules = []) => {
           await updateMany(
             TRANSACTIONS_COLLECTION_NAME,
             filter,
-            createCategorizeUpdate(action, rule)
+            _createCategorizeUpdate(action, rule)
           )
           break
         default:

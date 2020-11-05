@@ -7,16 +7,93 @@ import { ObjectID, ObjectId } from 'mongodb'
 import { red, green, yellow, logRequest, _log } from 'logger'
 
 const test = wrap(async (req, res) => {
-  // Get all the _ids you want to fun the update for.
-  // Use a Ramda function that applies a function to all
-  // elements of arrays to convert them to ObjectIDs if
-  // necessary (they may already be?).
-  // Use $in as show below.
-  const ret = await find(TRANSACTIONS_COLLECTION_NAME, {
-    _id: { $in: [new ObjectId('5e9c76f0e6578c43f74db481')] }
-  })
+
+  const match1 = {
+    $match: {}
+  }
+
+  const project1 = {
+    $project: {
+      _id: 1,
+      acctId: 1,
+      date: 1,
+      description: 1,
+      origDescription: 1,
+      amount: 1,
+      category1: 1,
+      category2: 1,
+      checkNumber: 1,
+      type: 1,
+      omit: 1,
+      ruleIds: 1,
+      // $test: { $omit: { $exists: false } }
+        
+      
+      // test: 
+      // {
+      //   $switch:
+      //   {
+      //     branches: [
+      //       {
+      //         case: { ruleIds: { $size: [0] } },
+      //         then: "hello"
+      //       },
+      //       // { case: { }}
+      //     ],
+      //     default: "nope"
+      //   }
+      // }
+    }
+    
+
+  }
+
+  // const addFields = {
+  //   $addFields: {
+  //     test: 
+  //   }
+  // }
+
+  
+
+  // const project1 = {
+  //   $project: {
+  //     _id: 0,
+  //     category1: 1,
+  //     ruleIds: 1
+  //   }
+  // }
+  const q = [match1, project1, addFields]
+
+  const ret = await executeAggregate(TRANSACTIONS_COLLECTION_NAME, q)
 
   res.send(ret)
 })
 
 export default test
+
+
+// combined
+  // ruleRadio: {
+  //   $switch: {
+  //     branches: [
+  //       {
+  //         case: { $or: [{
+  //             // Check about no Company key
+  //             ruleIds: {
+  //               $exists: false
+  //             }
+  //           }, {
+  //             // Check for null
+  //             ruleIds: null
+  //           }, {
+  //             // Check for empty array
+  //             ruleIds: {
+  //               $size: 0
+  //             }
+  //           }]},
+  //         then: 'both'
+  //       }
+  //     ]
+  //   }
+  // }

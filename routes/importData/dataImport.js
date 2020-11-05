@@ -11,7 +11,7 @@ import {
 } from 'db/constants'
 import csv from 'csvtojson'
 import runRules from 'actions/runRules'
-import { _transformData } from './transformData'
+import { transformData } from './transformData'
 import R from 'ramda'
 
 // eslint-disable-next-line
@@ -22,7 +22,7 @@ import { parse } from 'json2csv'
 
 // tmp
 
-const readCsvFile = async (file, hasHeaders) => {
+const _readCsvFile = async (file, hasHeaders) => {
   try {
     if (hasHeaders) {
       const json = await csv({
@@ -47,14 +47,14 @@ const readCsvFile = async (file, hasHeaders) => {
 }
 
 
-const dropDatabases = async (loadRaw) => {
+const _dropDatabases = async (loadRaw) => {
   await dropCollection(TRANSACTIONS_COLLECTION_NAME)
   // if (loadRaw) {
   await dropCollection('raw-data')
   // }
 }
 
-const getAccounts = async () => {
+const _getAccounts = async () => {
   return await find(ACCOUNTS_COLLECTION_NAME, {
     active: { $ne: false }
   })
@@ -65,14 +65,14 @@ const getAccounts = async () => {
  * @param {string} acctId 
  * @param {array} rawData 
  */
-const loadRawData = async (acctId, rawData) => {
+const _loadRawData = async (acctId, rawData) => {
   const data = R.map(doc => R.mergeRight(doc, { acctId }), rawData)
   await insertMany('raw-data', data)
 }
 
 // const getRawData = 
 
-const createIndices = async () => {
+const _createIndices = async () => {
   await createIndex(TRANSACTIONS_COLLECTION_NAME, tFields.description.name, {
     collation: { caseLevel: true, locale: 'en_US' }
   })
@@ -82,7 +82,7 @@ const createIndices = async () => {
 }
 
 // TODO: debug
-const accountCounts = (acctId) => {
+const _accountCounts = (acctId) => {
   yellow('acctId', acctId)
   switch (acctId) {
     case 'cb.chase.amazon-visa.9497':
@@ -117,8 +117,8 @@ const accountCounts = (acctId) => {
 const dataImport = async () => {
   try {
     let docsInserted = 0
-    await dropDatabases()
-    const accounts = await getAccounts()
+    await _dropDatabases()
+    const accounts = await _getAccounts()
 
     for (let i = 0; i < accounts.length; i++) {
       const account = accounts[i]
@@ -130,9 +130,9 @@ const dataImport = async () => {
       //
 
         console.group(`account: ${accounts[i].acctId}`)
-        const rawData = await readCsvFile(dataFilename, hasHeaders)
-        loadRawData(acctId, rawData)
-        const transformedData = _transformData(account, rawData)
+        const rawData = await _readCsvFile(dataFilename, hasHeaders)
+        _loadRawData(acctId, rawData)
+        const transformedData = transformData(account, rawData)
         const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, transformedData)
         // tmp
         if (true) {
@@ -140,7 +140,7 @@ const dataImport = async () => {
           green('transformeData.length', transformedData.length)
           green('inserted.length', inserted.length)
         }
-        const rowLen = accountCounts(accounts[i].acctId)
+        const rowLen = _accountCounts(accounts[i].acctId)
         if (rawData.length !== rowLen) red(`rawData: expected ${rowLen} rows but found ${rawData.length}`)
         if (transformedData.length !== rowLen) red(`transformedData: Expected ${rowLen} rows but found ${rawData.length}`)
         if (inserted.length !== rowLen) red(`inserted: expected ${rowLen} rows but found ${rawData.length}`)
@@ -154,7 +154,7 @@ const dataImport = async () => {
       //
 
     }
-    await createIndices()
+    await _createIndices()
 
 
     // TODO: re-enable

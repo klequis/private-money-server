@@ -213,7 +213,7 @@ const _getFieldValue = R.curry((fieldName, account, doc) => {
 
 
 
-export const _transformData = (account, data) => {
+export const transformData = (account, data) => {
     const { colMap, acctId, hasCreditDebitField } = account
 
     const mapToFields = (doc) => {

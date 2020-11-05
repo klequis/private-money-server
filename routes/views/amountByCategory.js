@@ -13,8 +13,16 @@ const amountByCategory = wrap(async (req, res) => {
   const addFields = {
     $addFields: {
       // amount: '$debit'
-      amount: { $cond: { if: { $gt: ['$credit', 0] }, then: '$credit', else: '$debit' } },
-      type: { $cond: { if: { $gt: ['$credit', 0] }, then: 'credit', else: 'debit' } }
+      amount: { 
+        $cond: { 
+          if: { $gt: ['$credit', 0] }, then: '$credit', else: '$debit' 
+        } 
+      },
+      type: { 
+        $cond: { 
+          if: { $gt: ['$credit', 0] }, then: 'credit', else: 'debit' 
+        } 
+      }
     }
   }
 

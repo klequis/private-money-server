@@ -6,6 +6,7 @@ import {
 } from 'db/constants'
 // @ts-ignore
 import { yellow, red, redf } from 'logger'
+import * as R from 'ramda'
 
 const moreThan2Rules = (data) => data.filter(t => {
   if (t.ruleIds === undefined) {
@@ -43,7 +44,10 @@ const allDataByDescription = wrap(async (req, res) => {
   const data = await find(TRANSACTIONS_COLLECTION_NAME, {})
   // TODO: tmp code
   // const filtered = hasRules(data)
-  res.send({ data: convertFieldValuesToUi(data), error: null })
+
+  const limit100 = R.take(100, data)
+
+  res.send({ data: convertFieldValuesToUi(limit100), error: null })
   // } catch (e) {
   //   // redf('views/allDataByDescription', e.message)
   //   throw e
