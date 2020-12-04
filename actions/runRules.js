@@ -82,8 +82,8 @@ const _createOmitUpdate = (rule) => {
 }
 
 /**
- * 
- * @param {object} passedInRules Optional rule. 
+ *
+ * @param {object} passedInRules Optional rule.
  * @description If passedInRules.length === 0 runs all rules. Otherwise runs passed in rulles
  */
 const runRules = async (passedInRules = []) => {
@@ -104,7 +104,6 @@ const runRules = async (passedInRules = []) => {
 
     const filter = filterBuilder(criteria)
 
-
     if (criteria.length > 1) {
       LOG_FILTER && yellow('filter', filter)
       LOG_FILTER && filter.$and.map((v) => console.log(v))
@@ -115,8 +114,7 @@ const runRules = async (passedInRules = []) => {
       // green('action', action)
       switch (action.actionType) {
         case actionTypes.omit:
-          const omitUpdate = _createOmitUpdate(rule)
-          await updateMany(TRANSACTIONS_COLLECTION_NAME, filter, omitUpdate)
+          await updateMany(TRANSACTIONS_COLLECTION_NAME, filter, _createOmitUpdate(rule))
           break
         case actionTypes.strip:
           for (let j = 0; j < f.length; j++) {
@@ -146,9 +144,11 @@ const runRules = async (passedInRules = []) => {
           )
           break
         default:
-          redf('unknown action type:', action.actionType)
+          console.group('Unknown action type')
+          redf('actionType:', action.actionType)
           redf('rule', rule)
           redf('action', action)
+          console.groupEnd()
       }
     }
   }

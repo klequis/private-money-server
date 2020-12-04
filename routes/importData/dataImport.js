@@ -17,11 +17,6 @@ import R from 'ramda'
 // eslint-disable-next-line
 import { green, red, redf, yellow } from 'logger'
 
-// tmp
-import { parse } from 'json2csv'
-
-// tmp
-
 const _readCsvFile = async (file, hasHeaders) => {
   try {
     if (hasHeaders) {
@@ -119,16 +114,16 @@ const dataImport = async () => {
     let docsInserted = 0
     await _dropDatabases()
     const accounts = await _getAccounts()
+    // green('accounts', accounts)
 
     for (let i = 0; i < accounts.length; i++) {
       const account = accounts[i]
-
+      // green('account', account)
       const { acctId, dataFilename, hasHeaders } = accounts[i]
 
       //
       if (accounts[i].acctId === 'sb.citi.costco-visa.2791') { // if
       //
-
         console.group(`account: ${accounts[i].acctId}`)
         const rawData = await _readCsvFile(dataFilename, hasHeaders)
         _loadRawData(acctId, rawData)
