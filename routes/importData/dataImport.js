@@ -1,9 +1,4 @@
-import {
-  createIndex,
-  dropCollection,
-  find,
-  insertMany
-} from 'db'
+import { createIndex, dropCollection, find, insertMany } from 'db'
 import {
   ACCOUNTS_COLLECTION_NAME,
   TRANSACTIONS_COLLECTION_NAME,
@@ -41,12 +36,9 @@ const _readCsvFile = async (file, hasHeaders) => {
   }
 }
 
-
 const _dropDatabases = async (loadRaw) => {
   await dropCollection(TRANSACTIONS_COLLECTION_NAME)
-  // if (loadRaw) {
   await dropCollection('raw-data')
-  // }
 }
 
 const _getAccounts = async () => {
@@ -56,16 +48,14 @@ const _getAccounts = async () => {
 }
 
 /**
- * 
- * @param {string} acctId 
- * @param {array} rawData 
+ *
+ * @param {string} acctId
+ * @param {array} rawData
  */
 const _loadRawData = async (acctId, rawData) => {
-  const data = R.map(doc => R.mergeRight(doc, { acctId }), rawData)
+  const data = R.map((doc) => R.mergeRight(doc, { acctId }), rawData)
   await insertMany('raw-data', data)
 }
-
-// const getRawData = 
 
 const _createIndices = async () => {
   await createIndex(TRANSACTIONS_COLLECTION_NAME, tFields.description.name, {
@@ -105,8 +95,6 @@ const _accountCounts = (acctId) => {
     default:
       return `${acctId} not found`
   }
-
-
 }
 
 const dataImport = async () => {
@@ -119,38 +107,53 @@ const dataImport = async () => {
     for (let i = 0; i < accounts.length; i++) {
       const account = accounts[i]
       // green('account', account)
-      const { acctId, dataFilename, hasHeaders } = accounts[i]
+      const { acctId, dataFilename, hasHeaders } = account
 
       //
-      if (accounts[i].acctId === 'sb.citi.costco-visa.2791') { // if
+      // if (account.acctId === 'sb.citi.costco-visa.2791') {
+      // if
       //
-        console.group(`account: ${accounts[i].acctId}`)
-        const rawData = await _readCsvFile(dataFilename, hasHeaders)
-        _loadRawData(acctId, rawData)
-        const transformedData = transformData(account, rawData)
-        const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, transformedData)
-        // tmp
-        if (true) {
-          green('rawData.length', rawData.length)
-          green('transformeData.length', transformedData.length)
-          green('inserted.length', inserted.length)
-        }
-        const rowLen = _accountCounts(accounts[i].acctId)
-        if (rawData.length !== rowLen) red(`rawData: expected ${rowLen} rows but found ${rawData.length}`)
-        if (transformedData.length !== rowLen) red(`transformedData: Expected ${rowLen} rows but found ${rawData.length}`)
-        if (inserted.length !== rowLen) red(`inserted: expected ${rowLen} rows but found ${rawData.length}`)
-        if (!R.equals([rawData.length, transformedData.length, inserted.length])) red(`row lengths do not match`)
-        docsInserted += inserted.length
-        console.groupEnd()
-        // tmp
+      console.group(`account: ${account.acctId}`)
+      const rawData = await _readCsvFile(dataFilename, hasHeaders)
+      _loadRawData(acctId, rawData)
+      const transformedData = transformData(account, rawData)
+      const inserted = await insertMany(
+        TRANSACTIONS_COLLECTION_NAME,
+        transformedData
+      )
+      // tmp
+      // eslint-disable-next-line
+      if (true) {
+        green('rawData.length', rawData.length)
+        green('transformeData.length', transformedData.length)
+        green('inserted.length', inserted.length)
+      }
+      const rowLen = _accountCounts(account.acctId)
+      if (rawData.length !== rowLen) {
+        red(`rawData: expected ${rowLen} rows but found ${rawData.length}`)
+      }
+      if (transformedData.length !== rowLen) {
+        red(
+          `transformedData: Expected ${rowLen} rows but found ${rawData.length}`
+        )
+      }
+      if (inserted.length !== rowLen) {
+        red(`inserted: expected ${rowLen} rows but found ${rawData.length}`)
+      }
+      if (
+        !R.equals([rawData.length, transformedData.length, inserted.length])
+      ) {
+        red('row lengths do not match')
+      }
+      docsInserted += inserted.length
+      console.groupEnd()
+      // tmp
 
       //
-      } // if
+      // } //
       //
-
     }
     await _createIndices()
-
 
     // TODO: re-enable
     await runRules()
@@ -162,7 +165,6 @@ const dataImport = async () => {
         numDocsLoaded: docsInserted
       }
     ])
-
   } catch (e) {
     redf('dataImport ERROR:', e.message)
     console.log(e)
