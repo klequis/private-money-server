@@ -1,4 +1,3 @@
-// @ts-nocheck
 import mongodb, { ObjectID } from 'mongodb'
 import { hasProp } from 'lib'
 import config from 'config'

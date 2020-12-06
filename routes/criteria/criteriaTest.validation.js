@@ -5,7 +5,6 @@ import {
   criteriaSelectFieldNames
 } from 'db/constants'
 
-// @ts-ignore
 // eslint-disable-next-line
 import { blue, yellow, redf } from 'logger'
 

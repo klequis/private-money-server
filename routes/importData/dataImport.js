@@ -42,7 +42,7 @@ const _dropDatabases = async (loadRaw) => {
 }
 
 const _getAccounts = async () => {
-  return await find(ACCOUNTS_COLLECTION_NAME, {
+  return find(ACCOUNTS_COLLECTION_NAME, {
     active: { $ne: false }
   })
 }

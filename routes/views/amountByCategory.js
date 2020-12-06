@@ -2,7 +2,7 @@ import wrap from 'routes/wrap'
 import { executeAggregate } from 'db/dbFunctions'
 import { TRANSACTIONS_COLLECTION_NAME } from 'db/constants'
 
-// @ts-ignore
+// eslint-disable-next-line
 import { red, green, yellow, logRequest } from 'logger'
 
 const amountByCategory = wrap(async (req, res) => {

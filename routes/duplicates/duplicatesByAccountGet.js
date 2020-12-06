@@ -1,9 +1,12 @@
 import wrap from 'routes/wrap'
 import { executeAggregate } from 'db/dbFunctions'
-import { TRANSACTIONS_COLLECTION_NAME, convertFieldValuesToUi } from 'db/constants'
+import {
+  TRANSACTIONS_COLLECTION_NAME,
+  convertFieldValuesToUi
+} from 'db/constants'
 import * as R from 'ramda'
 
-// @ts-ignore
+// eslint-disable-next-line
 import { redf, yellow } from 'logger'
 
 const match1 = {
@@ -31,16 +34,10 @@ const replaceId = (doc) => {
 }
 
 const duplicatesGet = wrap(async (req, res) => {
-  try {
-    const q = [match1, group1]
-    const ret = await executeAggregate(TRANSACTIONS_COLLECTION_NAME, q)
-    const y = R.map(replaceId, ret)
-    res.send({ data: convertFieldValuesToUi(y), error: null })
-  } catch (e) {
-    throw e
-    // redf('duplicates/duplicatesByAccountGet', e.message)
-    // console.log(e)
-  }
+  const q = [match1, group1]
+  const ret = await executeAggregate(TRANSACTIONS_COLLECTION_NAME, q)
+  const y = R.map(replaceId, ret)
+  res.send({ data: convertFieldValuesToUi(y), error: null })
 })
 
 export default duplicatesGet

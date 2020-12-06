@@ -4,7 +4,7 @@ import { TRANSACTIONS_COLLECTION_NAME, duplicateStatus } from 'db/constants'
 import * as R from 'ramda'
 import { ObjectID } from 'mongodb'
 
-// @ts-ignore
+// eslint-disable-next-line
 import { red, green, yellow, logRequest, _log } from 'logger'
 
 const checkNewDuplicates = wrap(async (req, res) => {
@@ -67,7 +67,13 @@ const checkNewDuplicates = wrap(async (req, res) => {
   const um = await updateMany(
     TRANSACTIONS_COLLECTION_NAME,
     { _id: { $in: flat } },
-    { $set: { duplicateId: new ObjectID(), duplicateStatus: duplicateStatus.duplicateNew, duplicate: true } }
+    {
+      $set: {
+        duplicateId: new ObjectID(),
+        duplicateStatus: duplicateStatus.duplicateNew,
+        duplicate: true
+      }
+    }
   )
 
   const f = await find(TRANSACTIONS_COLLECTION_NAME, { _id: { $in: flat } })

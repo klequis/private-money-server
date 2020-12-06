@@ -1,7 +1,6 @@
 import wrap from 'routes/wrap'
 import transactionsToCsv from './transactionsToCsv'
 
-// @ts-ignore
 // eslint-disable-next-line
 import { red, green, yellow } from 'logger'
 

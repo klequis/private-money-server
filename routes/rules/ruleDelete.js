@@ -1,11 +1,15 @@
 import wrap from 'routes/wrap'
-import { TRANSACTIONS_COLLECTION_NAME, RULES_COLLECTION_NAME } from 'db/constants'
+import {
+  TRANSACTIONS_COLLECTION_NAME,
+  RULES_COLLECTION_NAME
+} from 'db/constants'
 import { findOneAndDelete, find, findOneAndReplace } from 'db'
 import runRules from 'actions/runRules'
 import { ObjectId } from 'mongodb'
 import { isValidMongoStringId } from 'lib/isValidMongoStringId'
 import { mergeRight, dissoc } from 'ramda'
-// @ts-ignore
+
+// eslint-disable-next-line
 import { green, redf } from 'logger'
 
 const ruleDelete = wrap(async (req, res) => {
@@ -32,9 +36,9 @@ const ruleDelete = wrap(async (req, res) => {
     // Find docs from transactions collection that have the rule._id
     const dataFound = await find(TRANSACTIONS_COLLECTION_NAME, { ruleIds: id })
 
-    const newDataDocs = dataFound.map(doc => {
+    const newDataDocs = dataFound.map((doc) => {
       const { origDescription, ruleIds } = doc
-      const newRuleIds = ruleIds.filter(filterRuleId => {
+      const newRuleIds = ruleIds.filter((filterRuleId) => {
         // compare 'ruleid' from params to current 'ruleId' of filter
         const filterRuleIdAsString = filterRuleId.toHexString()
         return filterRuleIdAsString !== ruleid
@@ -46,10 +50,11 @@ const ruleDelete = wrap(async (req, res) => {
           description: origDescription
         })
       } else {
-        return mergeRight(dissoc('ruleIds', doc), { description: origDescription })
+        return mergeRight(dissoc('ruleIds', doc), {
+          description: origDescription
+        })
       }
     })
-
 
     for (let i = 0; i < newDataDocs.length; i++) {
       const doc = newDataDocs[i]
@@ -62,10 +67,9 @@ const ruleDelete = wrap(async (req, res) => {
 
     // return rules
     await runRules()
-    
+
     // TODO: incorrect data format
     res.send({ value: 'test' })
-
   } catch (e) {
     throw e
   }

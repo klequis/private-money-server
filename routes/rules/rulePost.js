@@ -5,7 +5,7 @@ import { mergeRight } from 'ramda'
 import { ObjectID } from 'mongodb'
 import runRules from 'actions/runRules'
 
-// @ts-ignore
+// eslint-disable-next-line
 import { yellow, redf } from 'logger'
 
 const replaceTmpId = (obj) => {

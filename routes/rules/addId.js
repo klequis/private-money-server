@@ -11,41 +11,37 @@ import wrap from 'routes/wrap'
 import { RULES_COLLECTION_NAME } from 'db/constants'
 import { find, findOneAndReplace } from 'db/dbFunctions'
 import { mergeRight } from 'ramda'
-
-// @ts-ignore
-import { red, redf, green, yellow, logRequest } from 'logger'
 import { ObjectID } from 'mongodb'
 
+// eslint-disable-next-line
+import { red, redf, green, yellow, logRequest } from 'logger'
+
 const addId = wrap(async (req, res) => {
-  try {
-    const f = await find(RULES_COLLECTION_NAME, {})
+  const f = await find(RULES_COLLECTION_NAME, {})
 
-    f.forEach(doc => {
-      const { _id, criteria, actions, acct } = doc
-      const newCriteria = criteria.map(c =>
-        mergeRight(c, { _id: new ObjectID() })
-      )
+  f.forEach((doc) => {
+    const { _id, criteria, actions, acct } = doc
+    const newCriteria = criteria.map((c) =>
+      mergeRight(c, { _id: new ObjectID() })
+    )
 
-      const newActions = actions.map(a =>
-        mergeRight(a, { _id: new ObjectID() })
-      )
+    const newActions = actions.map((a) =>
+      mergeRight(a, { _id: new ObjectID() })
+    )
 
-      findOneAndReplace(
-        RULES_COLLECTION_NAME,
-        { _id: _id },
-        {
-          acctId: acct,
-          criteria: newCriteria,
-          actions: newActions
-        }
-      )
-    })
-    
-    // TODO: incorrect data format
-    res.send('success')
-  } catch (e) {
-    throw e
-  }
+    findOneAndReplace(
+      RULES_COLLECTION_NAME,
+      { _id: _id },
+      {
+        acctId: acct,
+        criteria: newCriteria,
+        actions: newActions
+      }
+    )
+  })
+
+  // TODO: incorrect data format
+  res.send('success')
 })
 
 export default addId
