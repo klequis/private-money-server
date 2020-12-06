@@ -50,6 +50,7 @@ const allDataByDescription = wrap(async (req, res) => {
   // TODO: tmp code here
   // const limit100 = R.take(100, data)
   // res.send({ data: convertFieldValuesToUi(limit100), error: null })
+  yellow('data.length', data.length)
 
   res.send({ data: convertFieldValuesToUi(data), error: null })
 })

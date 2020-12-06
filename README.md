@@ -46,7 +46,7 @@ amount: R.pipe(
 // }
 
 
-const getAmountFieldValue = (field, account, doc) => {
+const _getAmountFieldValue = (field, account, doc) => {
   const { hasCreditDebitFields, swapAmountFieldSign } = account
 
   let value
@@ -56,15 +56,18 @@ const getAmountFieldValue = (field, account, doc) => {
     const debitVal = _getValueFromRawData(tFields.debit.name, account, doc)
     if (_isZeroOrEmpty(creditVal) && !_isZeroOrEmpty(debitVal)) {
       // amount is a debit
+      value = debitVal
     } else if (!_isZeroOrEmpty(creditVal) && _isZeroOrEmpty(debitVal)) {
       // amount is a credit
+      value = creditVal
     } else {
       thorw new Error('both credit & debit are zero (0)')
     }
   }
+  return value
 }
 
-const _getValueFromRawData = (fieldName, account, doc) => {
+const _getFieldValueFromRawData = (fieldName, account, doc) => {
   const { colMap } = account
   const colNum = R.prop(fieldName, colMap)
   return doc[`field${colNum}`]
