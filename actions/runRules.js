@@ -10,7 +10,16 @@ import * as R from 'ramda'
 import { LOG_CRITERIA, LOG_FILTER } from 'global-constants'
 
 // eslint-disable-next-line
-import { logCriteria, logActions, logFilter, blue, green, greenf, redf, yellow } from 'logger'
+import {
+  logCriteria,
+  logActions,
+  logFilter,
+  blue,
+  green,
+  greenf,
+  redf,
+  yellow
+} from 'logger'
 
 // const printFilter = (filter) => {
 //   console.log('// filter')
@@ -81,6 +90,10 @@ const _createOmitUpdate = (rule) => {
   return update
 }
 
+const reportCount = (count) => {
+  console.log('count', count)
+}
+
 /**
  *
  * @param {object} passedInRules Optional rule.
@@ -88,6 +101,13 @@ const _createOmitUpdate = (rule) => {
  */
 const runRules = async (passedInRules = []) => {
   // TODO: use R.pipe for processing here
+  const count = {
+    omit: 0,
+    strip: 0,
+    replaceAll: 0,
+    categorize: 0,
+    total: 0
+  }
   let rules
   if (passedInRules.length !== 0) {
     rules = passedInRules
@@ -108,13 +128,39 @@ const runRules = async (passedInRules = []) => {
       LOG_FILTER && yellow('filter', filter)
       LOG_FILTER && filter.$and.map((v) => console.log(v))
     }
+
+    const incrementCount = (prop) => {
+      switch (prop) {
+        case 'omit':
+          count.omit = count.omit + 1
+          break
+        case 'strip':
+          count.strip = count.strip + 1
+          break
+        case 'replaceAll':
+          count.replaceAll = count.replaceAll + 1
+          break
+        case 'categorize':
+          count.categorize = count.categorize + 1
+          break
+        default:
+        // do nothing
+      }
+      count.total = count.total + 1
+    }
+
     const f = await find(TRANSACTIONS_COLLECTION_NAME, filter)
     for (let j = 0; j < actions.length; j++) {
       const action = actions[j]
       // green('action', action)
       switch (action.actionType) {
         case actionTypes.omit:
-          await updateMany(TRANSACTIONS_COLLECTION_NAME, filter, _createOmitUpdate(rule))
+          await updateMany(
+            TRANSACTIONS_COLLECTION_NAME,
+            filter,
+            _createOmitUpdate(rule)
+          )
+          incrementCount('omit')
           break
         case actionTypes.strip:
           for (let j = 0; j < f.length; j++) {
@@ -125,6 +171,7 @@ const runRules = async (passedInRules = []) => {
               _createStripUpdate(action, doc, rule)
             )
           }
+          incrementCount('strip')
           break
         case actionTypes.replaceAll:
           for (let j = 0; j < f.length; j++) {
@@ -135,6 +182,7 @@ const runRules = async (passedInRules = []) => {
               _createReplaceAllUpdate(action, rule)
             )
           }
+          incrementCount('replaceAll')
           break
         case actionTypes.categorize:
           await updateMany(
@@ -142,6 +190,7 @@ const runRules = async (passedInRules = []) => {
             filter,
             _createCategorizeUpdate(action, rule)
           )
+          incrementCount('categorize')
           break
         default:
           console.group('Unknown action type')
@@ -152,6 +201,7 @@ const runRules = async (passedInRules = []) => {
       }
     }
   }
+  reportCount(count)
 }
 
 export default runRules

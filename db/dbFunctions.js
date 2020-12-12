@@ -12,12 +12,12 @@ let client
 class DatabaseError extends Error {
   constructor(e, ...params) {
     super(...params)
-    this.name = "DatabaseError"
+    this.name = 'DatabaseError'
     this.message = e.message
   }
 }
 
-const idStringToObjectID = obj => {
+const idStringToObjectID = (obj) => {
   switch (typeof obj) {
     case 'string':
       return ObjectID(obj)
@@ -100,12 +100,11 @@ export const insertMany = async (collection, data) => {
  * @returns {boolean}
  *
  */
-export const dropCollection = async collection => {
+export const dropCollection = async (collection) => {
   try {
     const { db } = await connectDB()
 
     return await db.collection(collection).drop()
-
   } catch (e) {
     if (e.message === 'ns not found') {
       return true
@@ -138,7 +137,7 @@ export const insertOne = async (collection, data) => {
  * @param {string} collection the name of a collection
  * @param {object} filter filter criteria
  * @param {object} projection a valid projection
- * @param {object} collation 
+ * @param {object} collation
  * @returns {array}
  *
  */
@@ -159,7 +158,6 @@ export const find = async (
       .toArray()
     return ret
   } catch (e) {
-
     throw new DatabaseError(e)
   }
 }
@@ -177,7 +175,6 @@ export const findOne = async (collection, filter = {}, projection = {}) => {
   try {
     const { db } = await connectDB()
     return await db.collection(collection).findOne(f, { projection })
-
   } catch (e) {
     throw new Error(e.message)
   }
@@ -302,9 +299,6 @@ export const createCollection = async (name, options) => {
 
 export const executeAggregate = async (collection, query) => {
   const { db } = await connectDB()
-  const ret = await db
-    .collection(collection)
-    .aggregate(query)
-    .toArray()
+  const ret = await db.collection(collection).aggregate(query).toArray()
   return ret
 }
