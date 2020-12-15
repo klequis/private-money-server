@@ -1,0 +1,18 @@
+[{
+  "_id": {
+    "$oid": "5e46eef3626be23800bbb040"
+  },
+  "acctId": "mm.aabank.checking.2222",
+  "dataFilename": "mm.aabank.checking.2222.csv",
+  "hasHeaders": true,
+  "hasCreditDebitFields": false,
+  "colMap": {
+    "date": 2,
+    "description": 3,
+    "debit": 4,
+    "credit": 4,
+    "type": 5,
+    "checkNumber": 7
+  },
+  "swapAmountFieldSign": false
+}]
