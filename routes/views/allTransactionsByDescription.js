@@ -46,14 +46,14 @@ import * as R from 'ramda'
 
 const allDataByDescription = wrap(async (req, res) => {
   const { params } = req
-  const { omit } = params
+  const { showOmitted } = params
 
-  const filter = omit === 'true' ? {} : { omit: { $ne: false } }
+  const filter = showOmitted === 'true' ? { omit: { $eq: true } } : { omit: { $eq: false } }
 
   const data = await find(TRANSACTIONS_COLLECTION_NAME, filter)
   
   yellow('params', params)
-  yellow('omit', omit)
+  yellow('omit', showOmitted)
   // TODO: tmp code here
   // const limit100 = R.take(100, data)
   // res.send({ data: convertFieldValuesToUi(limit100), error: null })
