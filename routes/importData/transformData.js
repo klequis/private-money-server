@@ -3,6 +3,7 @@ import R from 'ramda'
 
 // eslint-disable-next-line
 import { green, red, redf, yellow, blue } from 'logger'
+import isNilOrEmpty from '../../lib/isNilOrEmpty'
 
 const _removeDoubleSpace = (value) => value.replace(/\s{2,}/g, ' ').trim()
 
@@ -22,11 +23,11 @@ const _isZeroOrEmpty = (value) => value === 0 || value === ''
 const _getFieldValueFromRawData = R.curry((fieldName, account, doc) => {
   const { colMap } = account
   const colNum = R.prop(fieldName, colMap)
-  return doc[`field${colNum}`]
+  const val = doc[`field${colNum}`]
+  return isNilOrEmpty(val) ? '' : val
 })
 
 const _getAmountFieldValue = (field, account, doc) => {
-
   // will be passed `field` but it is not needed
 
   const { swapAmountFieldSign, colMap } = account
