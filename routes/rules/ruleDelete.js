@@ -21,58 +21,54 @@ const ruleDelete = wrap(async (req, res) => {
       allow any other rules that effect the description after
       description is restored to origDescription[]
   */
-  try {
-    const { params } = req
-    const { ruleid } = params
+  const { params } = req
+  const { ruleid } = params
 
-    if (!isValidMongoStringId(ruleid)) {
-      throw new Error(`Param ruleid: ${ruleid} is not a valid ObjectID`)
-    }
-    const id = ObjectId.createFromHexString(ruleid)
+  if (!isValidMongoStringId(ruleid)) {
+    throw new Error(`Param ruleid: ${ruleid} is not a valid ObjectID`)
+  }
+  const id = ObjectId.createFromHexString(ruleid)
 
-    // Check if the rule exists
-    // const rulesFound = await find(RULES_COLLECTION_NAME, { _id: id })
+  // Check if the rule exists
+  // const rulesFound = await find(RULES_COLLECTION_NAME, { _id: id })
 
-    // Find docs from transactions collection that have the rule._id
-    const dataFound = await find(TRANSACTIONS_COLLECTION_NAME, { ruleIds: id })
+  // Find docs from transactions collection that have the rule._id
+  const dataFound = await find(TRANSACTIONS_COLLECTION_NAME, { ruleIds: id })
 
-    const newDataDocs = dataFound.map((doc) => {
-      const { origDescription, ruleIds } = doc
-      const newRuleIds = ruleIds.filter((filterRuleId) => {
-        // compare 'ruleid' from params to current 'ruleId' of filter
-        const filterRuleIdAsString = filterRuleId.toHexString()
-        return filterRuleIdAsString !== ruleid
-      })
-
-      if (newRuleIds.length > 0) {
-        return mergeRight(doc, {
-          ruleIds: newRuleIds,
-          description: origDescription
-        })
-      } else {
-        return mergeRight(dissoc('ruleIds', doc), {
-          description: origDescription
-        })
-      }
+  const newDataDocs = dataFound.map((doc) => {
+    const { origDescription, ruleIds } = doc
+    const newRuleIds = ruleIds.filter((filterRuleId) => {
+      // compare 'ruleid' from params to current 'ruleId' of filter
+      const filterRuleIdAsString = filterRuleId.toHexString()
+      return filterRuleIdAsString !== ruleid
     })
 
-    for (let i = 0; i < newDataDocs.length; i++) {
-      const doc = newDataDocs[i]
-      const { _id } = doc
-      const foar = findOneAndReplace(TRANSACTIONS_COLLECTION_NAME, { _id }, doc)
+    if (newRuleIds.length > 0) {
+      return mergeRight(doc, {
+        ruleIds: newRuleIds,
+        description: origDescription
+      })
+    } else {
+      return mergeRight(dissoc('ruleIds', doc), {
+        description: origDescription
+      })
     }
+  })
 
-    // delete the rule
-    const foad = await findOneAndDelete(RULES_COLLECTION_NAME, { _id: id })
-
-    // return rules
-    await runRules()
-
-    // TODO: incorrect data format
-    res.send({ value: 'test' })
-  } catch (e) {
-    throw e
+  for (let i = 0; i < newDataDocs.length; i++) {
+    const doc = newDataDocs[i]
+    const { _id } = doc
+    const foar = findOneAndReplace(TRANSACTIONS_COLLECTION_NAME, { _id }, doc)
   }
+
+  // delete the rule
+  const foad = await findOneAndDelete(RULES_COLLECTION_NAME, { _id: id })
+
+  // return rules
+  await runRules()
+
+  // TODO: incorrect data format
+  res.send({ value: 'test' })
 })
 
 export default ruleDelete

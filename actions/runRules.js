@@ -94,6 +94,8 @@ const reportCount = (count) => {
   console.log('count', count)
 }
 
+const getRules = async (ruleId = '') => {}
+
 /**
  *
  * @param {object} passedInRules Optional rule.
