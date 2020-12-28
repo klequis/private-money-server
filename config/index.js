@@ -2,6 +2,7 @@
 
 import settings from './config.settings'
 import debug from 'debug'
+import ecosystem from 'ecosystem.config.js'
 
 // eslint-disable-next-line
 import { green } from 'logger'
@@ -10,12 +11,12 @@ export const TEST_LOCAL = 'testLocal'
 export const DEV = 'development'
 export const PROD = 'production'
 
-const unknowEnvName = env =>
+const unknowEnvName = (env) =>
   `ERROR: config/index.js: unknown environment name: ${env}. Must be ${TEST_LOCAL}, ${DEV} or ${PROD}`
 
 const lConfig = debug('server:config')
 
-const mongoUri = env => {
+const mongoUri = (env) => {
   switch (env) {
     case TEST_LOCAL:
       lConfig('env: ', env)
@@ -32,7 +33,7 @@ const mongoUri = env => {
   }
 }
 
-const dbName = env => {
+const dbName = (env) => {
   switch (env) {
     case TEST_LOCAL:
       return settings.db[TEST_LOCAL].dbName
@@ -45,7 +46,7 @@ const dbName = env => {
   }
 }
 
-const apiRoot = env => {
+const apiRoot = (env) => {
   switch (env) {
     case TEST_LOCAL:
     case DEV:
@@ -57,7 +58,7 @@ const apiRoot = env => {
   }
 }
 
-const port = env => {
+const port = (env) => {
   switch (env) {
     case TEST_LOCAL:
     case DEV:
@@ -69,7 +70,7 @@ const port = env => {
   }
 }
 
-const setNodeEnv = env => {
+const setNodeEnv = (env) => {
   if (env) {
     return env
   } else if (process.env.NODE_ENV) {
@@ -80,9 +81,13 @@ const setNodeEnv = env => {
   }
 }
 
-const config = env => {
-  const _env = setNodeEnv(env)
-  const envExists = [TEST_LOCAL, DEV, PROD].findIndex(i => i === _env)
+const config = (env) => {
+  // green('env', process.env)
+  // green('ecosystem', ecosystem)
+  // green('ecosystem.apps.env.NODE_ENV', ecosystem.apps[0].env.NODE_ENV)
+  const _env = ecosystem.apps[0].env.NODE_ENV
+  green('_env', _env)
+  const envExists = [TEST_LOCAL, DEV, PROD].findIndex((i) => i === _env)
 
   if (!(envExists >= 0)) {
     throw new Error(unknowEnvName())

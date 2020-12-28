@@ -52,7 +52,7 @@ app.use('/api/import', importData)
 app.use('/api/test', test)
 app.use('/api/duplicates', duplicates)
 
-app.get('*', function(req, res) {
+app.get('*', function (req, res) {
   throw new Error(`unknown route: ..${req.url}`)
 })
 
@@ -80,7 +80,6 @@ const error = (err, req, res, next) => {
     return
   }
   red('server.error: msg-in', msg)
-  
 
   if (msg === 'no authorization token was found') {
     status = 401
@@ -106,7 +105,7 @@ const error = (err, req, res, next) => {
 
   res.status(status)
   red('server.error: msg-out', retMsg !== null ? retMsg : msg)
-  res.send({ data: null, error: retMsg !== null ? retMsg : msg})
+  res.send({ data: null, error: retMsg !== null ? retMsg : msg })
 }
 
 app.use(error)

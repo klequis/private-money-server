@@ -10,7 +10,6 @@
     "install-prod": "cd dist && npm i --production",
     "lint": "eslint *.*",
     "start": "NODE_ENV=development NODE_PATH=./ nodemon --exec babel-node server/index.js",
-    "start-dev-orig": "DEBUG=server*,todo-route NODE_ENV=development NODE_PATH=./ nodemon --exec babel-node server/index.js",
     "start-dev": "DEBUG=server* NODE_ENV=development NODE_PATH=./ nodemon --exec babel-node server/index.js",
     "start-prod": "NODE_ENV=production NODE_PATH=./ nodemon --exec babel-node server/index.js",
     "test": "NODE_ENV=testLocal NODE_PATH=./ mocha --require @babel/register",
