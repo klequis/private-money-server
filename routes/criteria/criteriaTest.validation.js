@@ -19,17 +19,17 @@ const isCriterionValuePropValueLongEnough = (criterion) => {
     return "Criterion is missing required property 'value'"
   }
   const { value } = criterion
-  
+
   return value.length > 2
     ? ''
     : `criterion: value prop must be 3 or more characters, received ${value} with length ${value.length}`
 }
 
-const isCriterionOperationPropValueValid = (criterion) => {
-  const { operation } = criterion
-  return R.includes(operation, operatorSelectFieldNames)
+const isCriterionOperatorPropValueValid = (criterion) => {
+  const { operator } = criterion
+  return R.includes(operator, operatorSelectFieldNames)
     ? ''
-    : `${operation} is not a valid value for criterion.value`
+    : `${operator} is not a valid value for criterion.value`
 }
 
 const isCriterionActive = (criterion) => {
@@ -43,7 +43,7 @@ const predicates = [
   isCriterionActive,
   isCriterionFieldPropValueValid,
   isCriterionValuePropValueLongEnough,
-  isCriterionOperationPropValueValid
+  isCriterionOperatorPropValueValid
 ]
 
 const check = R.pipe(

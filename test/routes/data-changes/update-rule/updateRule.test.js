@@ -9,7 +9,7 @@ const newRule = {
     {
       _id: '5e57d48edfb85a470c44e5b8',
       field: 'description',
-      operation: 'beginsWith',
+      operator: 'beginsWith',
       value: '24 Hour Fitness'
     }
   ],
@@ -28,10 +28,10 @@ const newRule = {
   ]
 }
 
-describe('test update-rule', function() {
+describe('test update-rule', function () {
   const _id = '5e4b11ea7834d2aa640765e5'
   const uri = `/api/rules/ruleid/${_id}`
-  it('get the rule', async function() {
+  it('get the rule', async function () {
     const r = await sendRequest({
       method: 'GET',
       uri: uri,
@@ -41,7 +41,7 @@ describe('test update-rule', function() {
     const { criteria } = body[0]
     // yellow('criteria[0].value before', criteria[0].value)
   })
-  it('is rule changed', async function() {
+  it('is rule changed', async function () {
     const r = await sendRequest({
       method: 'PATCH',
       uri: uri,

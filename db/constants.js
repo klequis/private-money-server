@@ -189,8 +189,8 @@ const criteriaFields = {
     name: 'findValue',
     type: dataTypes.String
   },
-  operation: {
-    name: 'operation',
+  operator: {
+    name: 'operator',
     type: dataTypes.String
   },
   value: {

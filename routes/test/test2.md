@@ -8,13 +8,13 @@ I have an array of Rules.
       {
         _id: '5e95fe747886220133884c7b',
         field: 'description',
-        operation: 'equals',
+        operator: 'equals',
         value: 'CHECK 2455'
       },
       {
         _id: '5e95fe747886220133884c7c',
         field: 'debit',
-        operation: 'equals',
+        operator: 'equals',
         value: '-40'
       }
     ],
@@ -56,8 +56,5 @@ I need to go through the criterion for each rule and change the `value` properti
 
 - map the rules
   -> rule
-     - map the criteria
-       - if criterion.field === 'debit' -> R.mergeRight(criterion, { value: Number()})
-
-
-
+  - map the criteria
+    - if criterion.field === 'debit' -> R.mergeRight(criterion, { value: Number()})
