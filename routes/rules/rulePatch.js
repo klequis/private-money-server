@@ -46,7 +46,6 @@ const rulePatch = wrap(async (req, res) => {
 
   const convertedCriteria = convertCriteriaValuesToDb(criteria)
 
-
   // TODO check if is likely mongodb_id before trying to convert
   const id = ObjectId.createFromHexString(_id)
 

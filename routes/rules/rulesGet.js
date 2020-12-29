@@ -6,14 +6,8 @@ import { RULES_COLLECTION_NAME } from 'db/constants'
 import { red, green, yellow, logRequest } from 'logger'
 
 const rulesGet = wrap(async (req, res) => {
-  // try {
-    const f = await find(RULES_COLLECTION_NAME, {})
-
-
-    res.send({ data: f, error: null })
-  // } catch (e) {
-  //   throw e
-  // }
+  const f = await find(RULES_COLLECTION_NAME, {})
+  res.send({ data: f, error: null })
 })
 
 export default rulesGet

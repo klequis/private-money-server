@@ -20,6 +20,8 @@ import {
   redf,
   yellow
 } from 'logger'
+import isNilOrEmpty from '../lib/isNilOrEmpty'
+import { findById } from '../db'
 
 // const printFilter = (filter) => {
 //   console.log('// filter')
@@ -94,31 +96,66 @@ const reportCount = (count) => {
   console.log('count', count)
 }
 
-const getRules = async (ruleId = '') => {}
+const getRules = async (ruleId = '') => {
+  if (isNilOrEmpty(ruleId)) {
+    return find(RULES_COLLECTION_NAME, {})
+  } else {
+    return findById(RULES_COLLECTION_NAME, ruleId)
+  }
+}
 
 /**
  *
- * @param {object} passedInRules Optional rule.
- * @description If passedInRules.length === 0 runs all rules. Otherwise runs passed in rulles
+ * @param {string} ruleId optional _id of a rule to run.
+ * @description If passed a rule _id will run that one rul. Otherwise runs all rules.
+ *
  */
-const runRules = async (passedInRules = []) => {
+const runRules = async (ruleId) => {
   // TODO: use R.pipe for processing here
   const count = {
     omit: 0,
     strip: 0,
     replaceAll: 0,
     categorize: 0,
+    rulesRun: 0,
     total: 0
   }
-  let rules
-  if (passedInRules.length !== 0) {
-    rules = passedInRules
-  } else {
-    const allRules = await find(RULES_COLLECTION_NAME, {})
-    rules = allRules
+  const incrementCount = (prop) => {
+    switch (prop) {
+      case 'omit':
+        count.omit = count.omit + 1
+        break
+      case 'strip':
+        count.strip = count.strip + 1
+        break
+      case 'replaceAll':
+        count.replaceAll = count.replaceAll + 1
+        break
+      case 'categorize':
+        count.categorize = count.categorize + 1
+        break
+      case 'rule':
+        count.rulesRun = count.rulesRun + 1
+        break
+      default:
+      // do nothing
+    }
+    count.total = count.total + 1
   }
+  // let rules
+  // if (passedInRules.length !== 0) {
+  //   rules = passedInRules
+  // } else {
+  //   const allRules = await find(RULES_COLLECTION_NAME, {})
+  //   rules = allRules
+  // }
+  const rules = await getRules(ruleId)
+  blue('runRules: num rules to run', rules.length)
   for (let i = 0; i < rules.length; i++) {
     const rule = rules[i]
+    incrementCount('rule')
+
+    blue('runRules: running _id', rule._id)
 
     const { actions, criteria } = rule
 
@@ -129,26 +166,6 @@ const runRules = async (passedInRules = []) => {
     if (criteria.length > 1) {
       LOG_FILTER && yellow('filter', filter)
       LOG_FILTER && filter.$and.map((v) => console.log(v))
-    }
-
-    const incrementCount = (prop) => {
-      switch (prop) {
-        case 'omit':
-          count.omit = count.omit + 1
-          break
-        case 'strip':
-          count.strip = count.strip + 1
-          break
-        case 'replaceAll':
-          count.replaceAll = count.replaceAll + 1
-          break
-        case 'categorize':
-          count.categorize = count.categorize + 1
-          break
-        default:
-        // do nothing
-      }
-      count.total = count.total + 1
     }
 
     const f = await find(TRANSACTIONS_COLLECTION_NAME, filter)

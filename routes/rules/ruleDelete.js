@@ -64,6 +64,11 @@ const ruleDelete = wrap(async (req, res) => {
   // delete the rule
   const foad = await findOneAndDelete(RULES_COLLECTION_NAME, { _id: id })
 
+  /* TODO: issue #40
+      Instead of running all rules to clean-up a few transactions, can clean-up 
+      the transactions (`dataFound`)
+   */
+
   // return rules
   await runRules()
 

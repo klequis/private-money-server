@@ -29,7 +29,7 @@ const rulePost = wrap(async (req, res) => {
   const i = await insertOne(RULES_COLLECTION_NAME, newRule)
   yellow('rulePost: inserted', i)
   const { _id } = i[0]
-  await runRules()
+  await runRules(_id)
 
   // TODO: incorrect data format
   res.send({ _id: _id })
