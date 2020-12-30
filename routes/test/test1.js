@@ -7,7 +7,6 @@ import { ObjectID, ObjectId } from 'mongodb'
 import { red, green, yellow, logRequest, _log } from 'logger'
 
 const test = wrap(async (req, res) => {
-
   const match1 = {
     $match: {}
   }
@@ -25,11 +24,10 @@ const test = wrap(async (req, res) => {
       checkNumber: 1,
       type: 1,
       omit: 1,
-      ruleIds: 1,
+      ruleIds: 1
       // $test: { $omit: { $exists: false } }
-        
-      
-      // test: 
+
+      // test:
       // {
       //   $switch:
       //   {
@@ -44,17 +42,13 @@ const test = wrap(async (req, res) => {
       //   }
       // }
     }
-    
-
   }
 
   // const addFields = {
   //   $addFields: {
-  //     test: 
+  //     test:
   //   }
   // }
-
-  
 
   // const project1 = {
   //   $project: {
@@ -72,28 +66,27 @@ const test = wrap(async (req, res) => {
 
 export default test
 
-
 // combined
-  // ruleRadio: {
-  //   $switch: {
-  //     branches: [
-  //       {
-  //         case: { $or: [{
-  //             // Check about no Company key
-  //             ruleIds: {
-  //               $exists: false
-  //             }
-  //           }, {
-  //             // Check for null
-  //             ruleIds: null
-  //           }, {
-  //             // Check for empty array
-  //             ruleIds: {
-  //               $size: 0
-  //             }
-  //           }]},
-  //         then: 'both'
-  //       }
-  //     ]
-  //   }
-  // }
+// ruleRadio: {
+//   $switch: {
+//     branches: [
+//       {
+//         case: { $or: [{
+//             // Check about no Company key
+//             ruleIds: {
+//               $exists: false
+//             }
+//           }, {
+//             // Check for null
+//             ruleIds: null
+//           }, {
+//             // Check for empty array
+//             ruleIds: {
+//               $size: 0
+//             }
+//           }]},
+//         then: 'both'
+//       }
+//     ]
+//   }
+// }
