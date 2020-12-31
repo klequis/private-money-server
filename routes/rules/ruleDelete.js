@@ -12,6 +12,12 @@ import { mergeRight, dissoc } from 'ramda'
 // eslint-disable-next-line
 import { green, redf } from 'logger'
 
+/*
+    1. 
+
+
+*/
+
 const ruleDelete = wrap(async (req, res) => {
   /* TODO: confirm this is OK
       This function sets the description of each data doc
