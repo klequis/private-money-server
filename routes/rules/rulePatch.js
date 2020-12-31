@@ -1,15 +1,16 @@
 import wrap from 'routes/wrap'
 import {
   convertCriteriaValuesToDb,
-  TRANSACTIONS_COLLECTION_NAME,
+  // TRANSACTIONS_COLLECTION_NAME,
   RULES_COLLECTION_NAME
 } from 'db/constants'
 import * as R from 'ramda'
-import { findOneAndUpdate, find, updateMany } from 'db'
+import { findOneAndUpdate } from 'db'
 import runRules from 'actions/runRules'
 import { toString } from 'lib'
 import { ObjectId } from 'mongodb'
-import { wdCategory1, wdCategory2, wdDescription, wdRuleIds } from 'appWords'
+// import { wdCategory1, wdCategory2, wdDescription, wdRuleIds } from 'appWords'
+import { resetTx } from './resetTx'
 
 // eslint-disable-next-line
 import { red, redf, green, yellow, logRequest } from 'logger'
@@ -32,21 +33,21 @@ const rulePatch = wrap(async (req, res) => {
   // TODO check if is likely mongodb_id before trying to convert
   const ruleObjId = ObjectId.createFromHexString(_id)
 
-  const ret = await updateMany(
-    TRANSACTIONS_COLLECTION_NAME,
-    { ruleIds: ruleObjId },
-    [
-      {
-        $set: {
-          category1: '',
-          category2: '',
-          ruleIds: [],
-          description: '$origDescription'
-        }
-      }
-    ]
-  )
-
+  // const ret = await updateMany(
+  //   TRANSACTIONS_COLLECTION_NAME,
+  //   { ruleIds: ruleObjId },
+  //   [
+  //     {
+  //       $set: {
+  //         category1: '',
+  //         category2: '',
+  //         ruleIds: [],
+  //         description: '$origDescription'
+  //       }
+  //     }
+  //   ]
+  // )
+  const ret = resetTx(ruleObjId)
   console.log('ret', ret)
 
   // await updateMany
