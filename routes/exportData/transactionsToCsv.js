@@ -1,5 +1,8 @@
 import { find } from 'db'
-import { TRANSACTIONS_COLLECTION_NAME, transactionFields as tFields } from 'db/constants'
+import {
+  TRANSACTIONS_COLLECTION_NAME,
+  transactionFields as tFields
+} from 'db/constants'
 import fs from 'fs'
 import * as R from 'ramda'
 
@@ -46,7 +49,7 @@ const jsonToCsv = (json) => {
   return csv
 }
 
-const getMonthPlusOne = date => {
+const getMonthPlusOne = (date) => {
   const a = date.getMonth() + 1
   return a.toString().padStart(2, '0')
 }
@@ -71,7 +74,7 @@ const makeFileName = () => {
 }
 
 const writeFile = async (csv) => {
-  const fileName = `/home/klequis/Documents/income-expense.wk/${makeFileName()}`
+  const fileName = `/home/klequis/Documents/${makeFileName()}`
   await fs.promises.writeFile(
     // `/home/klequis/Downloads/${format(new Date(), 'ddMMyyyy')}data.csv`,
     fileName,
