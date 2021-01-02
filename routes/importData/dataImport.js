@@ -8,6 +8,8 @@ import csv from 'csvtojson'
 import runRules from 'actions/runRules'
 import { transformData } from './transformData'
 import R from 'ramda'
+const fse = require('fs-extra')
+const path = require('path')
 
 // eslint-disable-next-line
 import { green, red, redf, yellow } from 'logger'
@@ -97,11 +99,33 @@ const _accountCounts = (acctId) => {
   }
 }
 
+const _chkAcctFileExists = async (accounts) => {
+
+  return accounts.map(a => {
+    const fullPath = path.join(__dirname, 'data', a.fileName)
+    return 
+  })
+
+  for (let i=0: i<accounts.length, i++) {
+
+  }
+
+  // build an array of paths to check
+
+  // use promise.all to see if they exist
+  
+
+  const exists = await fs.pathExists(f)
+  
+  yellow('fullPath', fullPath)
+}
+
 const dataImport = async () => {
   try {
     let docsInserted = 0
     await _dropDatabases()
     const accounts = await _getAccounts()
+
     // green('accounts', accounts)
 
     for (let i = 0; i < accounts.length; i++) {
