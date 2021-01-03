@@ -99,26 +99,25 @@ const _accountCounts = (acctId) => {
   }
 }
 
-const _chkAcctFileExists = async (accounts) => {
+// const _chkAcctFileExists = async (accounts) => {
 
-  return accounts.map(a => {
-    const fullPath = path.join(__dirname, 'data', a.fileName)
-    return 
-  })
+//   return accounts.map(a => {
+//     const fullPath = path.join(__dirname, 'data', a.fileName)
+//     return
+//   })
 
-  for (let i=0: i<accounts.length, i++) {
+//   for (let i=0: i<accounts.length, i++) {
 
-  }
+//   }
 
-  // build an array of paths to check
+//   // build an array of paths to check
 
-  // use promise.all to see if they exist
-  
+//   // use promise.all to see if they exist
 
-  const exists = await fs.pathExists(f)
-  
-  yellow('fullPath', fullPath)
-}
+//   const exists = await fs.pathExists(f)
+
+//   yellow('fullPath', fullPath)
+// }
 
 const dataImport = async () => {
   try {
