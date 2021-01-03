@@ -1,6 +1,5 @@
 import * as R from 'ramda'
 import {
-  transactionFields,
   operatorSelectFieldNames,
   criteriaSelectFieldNames
 } from 'db/constants'
@@ -14,6 +13,7 @@ const isCriterionFieldPropValueValid = (criterion) => {
     ? ''
     : `${field} is not a valid property for criteria.field`
 }
+
 const isCriterionValuePropValueLongEnough = (criterion) => {
   if (!R.has('value')(criterion)) {
     return "Criterion is missing required property 'value'"
