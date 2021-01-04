@@ -99,6 +99,20 @@ const _accountCounts = (acctId) => {
   }
 }
 
+// const runIt = async () => {
+//   const s = await Promise.all(
+//     accounts.map(async (a) => {
+//       const fullName = path.join(__dirname, 'data', a.fileName)
+//       return {
+//         name: a.fileName,
+//         exists: await fileExists(fullName)
+//       }
+//     })
+//   )
+//   console.log('s', s)
+// }
+// runIt()
+
 // const _chkAcctFileExists = async (accounts) => {
 
 //   return accounts.map(a => {
