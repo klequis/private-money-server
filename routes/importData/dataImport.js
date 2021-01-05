@@ -8,7 +8,7 @@ import csv from 'csvtojson'
 import runRules from 'actions/runRules'
 import { transformData } from './transformData'
 import R from 'ramda'
-const fse = require('fs-extra')
+import { filesExists } from 'lib/filesExist'
 const path = require('path')
 
 // eslint-disable-next-line
@@ -99,19 +99,28 @@ const _accountCounts = (acctId) => {
   }
 }
 
-// const runIt = async () => {
-//   const s = await Promise.all(
-//     accounts.map(async (a) => {
-//       const fullName = path.join(__dirname, 'data', a.fileName)
-//       return {
-//         name: a.fileName,
-//         exists: await fileExists(fullName)
-//       }
-//     })
-//   )
-//   console.log('s', s)
-// }
-// runIt()
+const runIt = async (accounts) => {
+  // green('__dirname', __dirname)
+  // /home/klequis/dev/private-money/server/routes/importData
+  // /home/klequis/dev/private-money/server/data
+  // green('accounts', accounts)
+  return Promise.all(
+    accounts.map(async (a) => {
+      green('__dirname', __dirname)
+      green('a', a)
+      green('a.dataFileName', a.dataFilename)
+      const fullName = path.join(__dirname, 'data', a.dataFilename)
+
+      green('fullName', fullName)
+      // green('it/sb   ', )
+      return {
+        name: a.fileName,
+        fullName: fullName,
+        exists: await filesExists(fullName)
+      }
+    })
+  )
+}
 
 // const _chkAcctFileExists = async (accounts) => {
 
@@ -137,9 +146,10 @@ const dataImport = async () => {
   try {
     let docsInserted = 0
     await _dropDatabases()
-    const accounts = await _getAccounts()
-
-    // green('accounts', accounts)
+    const accounts1 = await _getAccounts()
+    const accounts = await runIt(accounts1)
+    green('accounts1', accounts1)
+    green('accounts', accounts)
 
     for (let i = 0; i < accounts.length; i++) {
       const account = accounts[i]
