@@ -7,7 +7,7 @@ module.exports = {
       env: {
         // NODE_ENV: 'development' // local db
         // NODE_ENV: 'production' // atlas
-        NODE_ENV: 'demo' //
+        NODE_ENV: 'development' // local
       }
     }
   ]

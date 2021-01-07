@@ -8,7 +8,7 @@ import csv from 'csvtojson'
 import runRules from 'actions/runRules'
 import { transformData } from './transformData'
 import R from 'ramda'
-import { filesExists } from 'lib/filesExist'
+import { fileExists } from 'lib/fileExists'
 const path = require('path')
 
 // eslint-disable-next-line
@@ -67,99 +67,27 @@ const _createIndices = async () => {
     collation: { caseLevel: true, locale: 'en_US' }
   })
 }
-
-// TODO: debug
-const _accountCounts = (acctId) => {
-  yellow('acctId', acctId)
-  switch (acctId) {
-    case 'cb.chase.amazon-visa.9497':
-      return 55
-    case 'cb.chase.checking.2465':
-      return 199
-    case 'cb.chase.saphire.8567':
-      return 24
-    case 'cb.chase.savings.2401':
-      return 23
-    case 'sb.chase.business-visa.4468':
-      return 17
-    case 'sb.chase.fredoom-visa.8820':
-      return 114
-    case 'sb.citi.costco-visa.2791':
-      return 1032
-    case 'sb.wells-farg.bu-market-rate-savings.09220':
-      return 25
-    case 'sb.wells-fargo.checking.7795':
-      return 22
-    case 'sb.wells-fargo.custom-management.3761':
-      return 64
-    case 'sb.wells-fargo.way2save.6223':
-      return 18
-    default:
-      return `${acctId} not found`
-  }
-}
-
-const runIt = async (accounts) => {
-  // green('__dirname', __dirname)
-  // /home/klequis/dev/private-money/server/routes/importData
-  // /home/klequis/dev/private-money/server/data
-  // green('accounts', accounts)
+const chkAcctFilesExist = async (accounts) => {
   return Promise.all(
     accounts.map(async (a) => {
-      green('__dirname', __dirname)
-      green('a', a)
-      green('a.dataFileName', a.dataFilename)
-      const fullName = path.join(__dirname, 'data', a.dataFilename)
-
-      green('fullName', fullName)
-      // green('it/sb   ', )
-      return {
-        name: a.fileName,
+      const fullName = path.join('data', a.dataFilename)
+      return R.mergeRight(a, {
         fullName: fullName,
-        exists: await filesExists(fullName)
-      }
+        exists: await fileExists(fullName)
+      })
     })
   )
 }
 
-// const _chkAcctFileExists = async (accounts) => {
-
-//   return accounts.map(a => {
-//     const fullPath = path.join(__dirname, 'data', a.fileName)
-//     return
-//   })
-
-//   for (let i=0: i<accounts.length, i++) {
-
-//   }
-
-//   // build an array of paths to check
-
-//   // use promise.all to see if they exist
-
-//   const exists = await fs.pathExists(f)
-
-//   yellow('fullPath', fullPath)
-// }
-
 const dataImport = async () => {
   try {
-    let docsInserted = 0
     await _dropDatabases()
-    const accounts1 = await _getAccounts()
-    const accounts = await runIt(accounts1)
-    green('accounts1', accounts1)
-    green('accounts', accounts)
-
+    const a = await _getAccounts()
+    const accounts = await chkAcctFilesExist(a)
+    let docsInserted = 0
     for (let i = 0; i < accounts.length; i++) {
       const account = accounts[i]
-      // green('account', account)
       const { acctId, dataFilename, hasHeaders } = account
-
-      //
-      // if (account.acctId === 'sb.citi.costco-visa.2791') {
-      // if
-      //
       console.group(`account: ${account.acctId}`)
       const rawData = await _readCsvFile(dataFilename, hasHeaders)
       _loadRawData(acctId, rawData)
@@ -168,37 +96,14 @@ const dataImport = async () => {
         TRANSACTIONS_COLLECTION_NAME,
         transformedData
       )
-      // tmp
       // eslint-disable-next-line
       if (true) {
         green('rawData.length', rawData.length)
         green('transformeData.length', transformedData.length)
         green('inserted.length', inserted.length)
       }
-      const rowLen = _accountCounts(account.acctId)
-      if (rawData.length !== rowLen) {
-        red(`rawData: expected ${rowLen} rows but found ${rawData.length}`)
-      }
-      if (transformedData.length !== rowLen) {
-        red(
-          `transformedData: Expected ${rowLen} rows but found ${rawData.length}`
-        )
-      }
-      if (inserted.length !== rowLen) {
-        red(`inserted: expected ${rowLen} rows but found ${rawData.length}`)
-      }
-      if (
-        !R.equals([rawData.length, transformedData.length, inserted.length])
-      ) {
-        red('row lengths do not match')
-      }
       docsInserted += inserted.length
       console.groupEnd()
-      // tmp
-
-      //
-      // } //
-      //
     }
     await _createIndices()
 
