@@ -68,7 +68,7 @@ const _createIndices = async () => {
   })
 }
 const chkAcctFilesExist = async (accounts) => {
-  return Promise.all(
+  const all = await Promise.all(
     accounts.map(async (a) => {
       const fullName = path.join('data', a.dataFilename)
       return R.mergeRight(a, {
@@ -77,6 +77,8 @@ const chkAcctFilesExist = async (accounts) => {
       })
     })
   )
+
+  return all.filter((a) => a.exists)
 }
 
 const dataImport = async () => {
