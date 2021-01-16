@@ -87,19 +87,6 @@ const _insertToTransactionsCollection = async (data) => {
 const getAccountRawData = async (account) => _readCsvFile(account)
 
 const mergeAccountsAndData = (data, accounts) => {
-  // yellow('data', data)
-  // yellow('accounts', accounts)
-  // return R.map(R.mergeRight({}, {}), accounts)
-  // const fn = (data, account) => {
-  //   yellow('fn')
-  //   return {
-  //     account,
-  //     data
-  //   }
-  // }
-  // const a = R.map(R.zipWith(fn, data, R.__), accounts)
-  // return a
-
   let ret = []
 
   for (let i = 0; i < accounts.length; i++) {
