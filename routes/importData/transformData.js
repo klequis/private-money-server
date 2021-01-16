@@ -18,16 +18,7 @@ const _toIsoString = (value) => {
 
 const _isZeroOrEmpty = (value) => value === 0 || value === ''
 
-
-
-const _getFieldValueFromRawData = R.curry((fieldName, account, doc) => {
-  const { colMap } = account
-  const colNum = R.prop(fieldName, colMap)
-  const val = doc[`field${colNum}`]
-  return isNilOrEmpty(val) ? '' : val
-})
-
-const _getAmountFieldValue = (field, account, doc) => {
+const _getAmountFieldValue = (account, doc) => {
   // will be passed `field` but it is not needed
 
   const { swapAmountFieldSign, colMap } = account
@@ -43,7 +34,11 @@ const _getAmountFieldValue = (field, account, doc) => {
   } else {
     // there are separate credit & debit fields
     // one of which should be non-zero && !== ''
-    const creditVal = _getFieldValueFromRawData(tFields.credit.name, account, doc)
+    const creditVal = _getFieldValueFromRawData(
+      tFields.credit.name,
+      account,
+      doc
+    )
     const debitVal = _getFieldValueFromRawData(tFields.debit.name, account, doc)
 
     if (_isZeroOrEmpty(creditVal) && !_isZeroOrEmpty(debitVal)) {
@@ -60,16 +55,32 @@ const _getAmountFieldValue = (field, account, doc) => {
   return swapAmountFieldSign ? -value : value
 }
 
-export const transformData = (account, data) => {
-  const { acctId } = account
+const _getFieldValueFromRawData = R.curry((fieldName, account, doc) => {
+  const { colMap } = account
+  const colNum = R.prop(fieldName, colMap)
+  const val = doc[`field${colNum}`]
+  return isNilOrEmpty(val) ? '' : val
+})
+
+const getDateValue = (account, doc) => {
+  // R.pipe(_getFieldValueFromRawData, _toIsoString)(
+  //   tFields.date.name,
+  //   account,
+  //   doc
+  // )
+  const field = tFields.date.name
+  const a = _getFieldValueFromRawData(field, account, doc)
+  const r = _toIsoString(a)
+  return r
+}
+
+export const transformData = (accountWithData) => {
+  const { acctId } = accountWithData
 
   const mapToFields = (doc) => {
     const ret = {
       acctId,
-      date: R.pipe(
-        _getFieldValueFromRawData,
-        _toIsoString
-      )(tFields.date.name, account, doc),
+      date: getDateValue(account, doc),
       description: R.pipe(
         _getFieldValueFromRawData,
         _removeDoubleSpace,
@@ -80,24 +91,19 @@ export const transformData = (account, data) => {
         _removeDoubleSpace,
         R.trim
       )(tFields.description.name, account, doc),
-      amount: R.pipe(
-        _getAmountFieldValue
-      )(tFields.amount.name, account, doc),
+      amount: R.pipe(_getAmountFieldValue)(tFields.amount.name, account, doc),
       category1: '',
       category2: '',
-      checkNumber: R.pipe(
-        _getFieldValueFromRawData
-      )(tFields.checkNumber.name, account, doc),
+      checkNumber: R.pipe(_getFieldValueFromRawData)(
+        tFields.checkNumber.name,
+        account,
+        doc
+      ),
       type: _getFieldValueFromRawData(tFields.type.name, account, doc),
       omit: false
     }
     return ret
   }
-  const transform = R.pipe(
-    mapToFields
-    // R.tap(printCreditDebit('bef')),
-    // R.evolve(evolver(account)),
-    // R.tap(printCreditDebit('aft')),
-  )
-  return R.map(transform, data)
+
+  return R.map(mapToFields, accountWithData)
 }

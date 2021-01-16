@@ -14,30 +14,6 @@ const path = require('path')
 // eslint-disable-next-line
 import { green, red, redf, yellow } from 'logger'
 
-const _readCsvFile = async (file, hasHeaders) => {
-  try {
-    if (hasHeaders) {
-      const json = await csv({
-        trim: true,
-        checkType: true,
-        noheader: false,
-        headers: []
-      }).fromFile(`data/${file}`)
-      return json
-    } else {
-      const json = await csv({
-        trim: true,
-        checkType: true,
-        noheader: true,
-        headers: []
-      }).fromFile(`data/${file}`)
-      return json
-    }
-  } catch (e) {
-    redf('readCSVFile ERROR:', `File ${file} not found.`)
-  }
-}
-
 const _dropDatabases = async (loadRaw) => {
   await dropCollection(TRANSACTIONS_COLLECTION_NAME)
   await dropCollection('raw-data')
@@ -81,49 +57,102 @@ const chkAcctFilesExist = async (accounts) => {
   return all.filter((a) => a.exists)
 }
 
-const dataImport = async () => {
-  try {
-    await _dropDatabases()
-    const a = await _getAccounts()
-    const accounts = await chkAcctFilesExist(a)
-    let docsInserted = 0
-    for (let i = 0; i < accounts.length; i++) {
-      const account = accounts[i]
-      const { acctId, dataFilename, hasHeaders } = account
-      console.group(`account: ${account.acctId}`)
-      const rawData = await _readCsvFile(dataFilename, hasHeaders)
-      _loadRawData(acctId, rawData)
-      const transformedData = transformData(account, rawData)
-      const inserted = await insertMany(
-        TRANSACTIONS_COLLECTION_NAME,
-        transformedData
-      )
-      // eslint-disable-next-line
-      if (true) {
-        green('rawData.length', rawData.length)
-        green('transformeData.length', transformedData.length)
-        green('inserted.length', inserted.length)
-      }
-      docsInserted += inserted.length
-      console.groupEnd()
-    }
-    await _createIndices()
+const _readCsvFile = async (account) => {
+  const { dataFilename, hasHeaders } = account
 
-    // TODO: re-enable
-    await runRules()
-
-    return JSON.stringify([
-      {
-        operation: 'load data',
-        status: 'success',
-        numDocsLoaded: docsInserted
-      }
-    ])
-  } catch (e) {
-    redf('dataImport ERROR:', e.message)
-    console.log(e)
-    return JSON.stringify([{}])
+  if (hasHeaders) {
+    const json = await csv({
+      trim: true,
+      checkType: true,
+      noheader: false,
+      headers: []
+    }).fromFile(`data/${dataFilename}`)
+    return json
+  } else {
+    const json = await csv({
+      trim: true,
+      checkType: true,
+      noheader: true,
+      headers: []
+    }).fromFile(`data/${dataFilename}`)
+    return json
   }
+}
+
+const _insertToTransactionsCollection = async (data) => {
+  await insertMany(TRANSACTIONS_COLLECTION_NAME, data)
+  // return += inserted.length
+}
+
+const getAccountRawData = async (account) => _readCsvFile(account)
+
+const mergeAccountsAndData = (data, accounts) => {
+  // yellow('data', data)
+  // yellow('accounts', accounts)
+  // return R.map(R.mergeRight({}, {}), accounts)
+  // const fn = (data, account) => {
+  //   yellow('fn')
+  //   return {
+  //     account,
+  //     data
+  //   }
+  // }
+  // const a = R.map(R.zipWith(fn, data, R.__), accounts)
+  // return a
+
+  let ret = []
+
+  for (let i = 0; i < accounts.length; i++) {
+    ret.push({
+      account: accounts[i],
+      data: data[i]
+    })
+  }
+  return ret
+}
+
+const dataImport = async () => {
+  await _dropDatabases()
+
+  // const transformPipe = await R.pipe(
+  //   _readCsvFile,
+
+  //   // R.andThen(transformData)
+  //   // R.andThen(_insertToTransactionsCollection)
+  // )
+  // const b = R.map(transformPipe, accounts)
+  // yellow('b', b)
+  // await _createIndices()
+  // await runRules()
+
+  const allAccts = await _getAccounts() // a database call
+  const validAccts = await chkAcctFilesExist(allAccts)
+
+  const allData = await Promise.all(R.map(getAccountRawData, validAccts))
+  // yellow('allData', allData)
+  const acctsWithData = mergeAccountsAndData(allData, validAccts)
+  yellow('acctsWithData', acctsWithData)
+  // yellow('o', allData.length)
+  // const acct1 = accounts[0]
+
+  // const p = R.mergeRight(
+
+  // )
+
+  // R.mergeRight(accounts, { data: o })
+  // yellow('p', p)
+
+  // yellow('o', o.length) // yellow is console.log with color
+  // yellow('o', o[0][0])
+  // yellow('acct1', acct1)
+
+  return JSON.stringify([
+    {
+      operation: 'load data',
+      status: 'success'
+      // numDocsLoaded: docsInserted
+    }
+  ])
 }
 
 export default dataImport
