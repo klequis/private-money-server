@@ -55,55 +55,62 @@ const _getAmountFieldValue = (account, doc) => {
   return swapAmountFieldSign ? -value : value
 }
 
-const _getFieldValueFromRawData = R.curry((fieldName, account, doc) => {
-  const { colMap } = account
+const _getFieldValueFromRawData = R.curry(({ fieldName, colMap, tx }) => {
   const colNum = R.prop(fieldName, colMap)
-  const val = doc[`field${colNum}`]
+  const val = tx[`field${colNum}`]
   return isNilOrEmpty(val) ? '' : val
 })
 
-const getDateValue = (account, doc) => {
-  // R.pipe(_getFieldValueFromRawData, _toIsoString)(
-  //   tFields.date.name,
-  //   account,
-  //   doc
-  // )
-  const field = tFields.date.name
-  const a = _getFieldValueFromRawData(field, account, doc)
-  const r = _toIsoString(a)
-  return r
+// const _log = (message) => (value) => console.log(message, value)
+const getDateValue = (colMap, tx) => {
+  // const a = _getFieldValueFromRawData(tFields.date.name, colMap, tx)
+  // const r = _toIsoString(a)
+
+  const a = R.pipe(
+    _getFieldValueFromRawData,
+    _toIsoString
+  )({
+    fieldName: tFields.date.name,
+    colMap,
+    tx
+  })
+  green('a', a)
+  return a
 }
 
 export const transformData = (accountWithData) => {
-  const { acctId } = accountWithData
+  const { account, data } = accountWithData
+  // green('account', account)
 
-  const mapToFields = (doc) => {
+  const { acctId, colMap } = account
+
+  const mapToFields = (tx) => {
     const ret = {
       acctId,
-      date: getDateValue(account, doc),
+      date: getDateValue(colMap, tx),
       description: R.pipe(
         _getFieldValueFromRawData,
         _removeDoubleSpace,
         R.trim
-      )(tFields.description.name, account, doc),
+      )(tFields.description.name, account, tx),
       origDescription: R.pipe(
         _getFieldValueFromRawData,
         _removeDoubleSpace,
         R.trim
-      )(tFields.description.name, account, doc),
-      amount: R.pipe(_getAmountFieldValue)(tFields.amount.name, account, doc),
+      )(tFields.description.name, account, tx),
+      amount: R.pipe(_getAmountFieldValue)(tFields.amount.name, account, tx),
       category1: '',
       category2: '',
       checkNumber: R.pipe(_getFieldValueFromRawData)(
         tFields.checkNumber.name,
         account,
-        doc
+        tx
       ),
-      type: _getFieldValueFromRawData(tFields.type.name, account, doc),
+      type: _getFieldValueFromRawData(tFields.type.name, account, tx),
       omit: false
     }
     return ret
   }
 
-  return R.map(mapToFields, accountWithData)
+  return R.map(mapToFields, data)
 }

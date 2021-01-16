@@ -86,16 +86,15 @@ const _insertToTransactionsCollection = async (data) => {
 
 const getAccountRawData = async (account) => _readCsvFile(account)
 
-const mergeAccountsAndData = (data, accounts) => {
-  let ret = []
-
-  for (let i = 0; i < accounts.length; i++) {
-    ret.push({
-      account: accounts[i],
-      data: data[i]
-    })
+const zipFn = (data, acct) => {
+  return {
+    account: acct,
+    data: data
   }
-  return ret
+}
+
+const mergeAccountsAndData = (data, accounts) => {
+  return R.zipWith(zipFn, data, accounts)
 }
 
 const dataImport = async () => {
@@ -118,7 +117,8 @@ const dataImport = async () => {
   const allData = await Promise.all(R.map(getAccountRawData, validAccts))
   // yellow('allData', allData)
   const acctsWithData = mergeAccountsAndData(allData, validAccts)
-  yellow('acctsWithData', acctsWithData)
+  const finalData = R.map(transformData, acctsWithData)
+  // yellow('acctsWithData', acctsWithData)
   // yellow('o', allData.length)
   // const acct1 = accounts[0]
 
