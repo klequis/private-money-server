@@ -1,9 +1,11 @@
 import { transactionFields as tFields } from 'db/constants'
 import R from 'ramda'
+import { getFieldValueFromRawData } from './getFieldValueFromRawData'
+import { getAmountValue } from './getAmountValue'
 
 // eslint-disable-next-line
-import { green, red, redf, yellow, blue } from 'logger'
-import isNilOrEmpty from '../../lib/isNilOrEmpty'
+import { green, red, redf, yellow, blue, bluef } from 'logger'
+// import isNilOrEmpty from '../../lib/isNilOrEmpty'
 
 const _removeDoubleSpace = (value) => value.replace(/\s{2,}/g, ' ').trim()
 
@@ -16,70 +18,61 @@ const _toIsoString = (value) => {
   }
 }
 
-const _isZeroOrEmpty = (value) => value === 0 || value === ''
-
-const _getAmountFieldValue = (account, doc) => {
-  // will be passed `field` but it is not needed
-
-  const { swapAmountFieldSign, colMap } = account
-  const { credit: creditColNum, debit: debitColNum } = colMap
-
-  let value
-
-  if (creditColNum === debitColNum) {
-    // there is only one amount field
-    // getting value for credit || debit will return value from same doc field
-    // so use credit
-    value = _getFieldValueFromRawData(tFields.credit.name, account, doc)
-  } else {
-    // there are separate credit & debit fields
-    // one of which should be non-zero && !== ''
-    const creditVal = _getFieldValueFromRawData(
-      tFields.credit.name,
-      account,
-      doc
-    )
-    const debitVal = _getFieldValueFromRawData(tFields.debit.name, account, doc)
-
-    if (_isZeroOrEmpty(creditVal) && !_isZeroOrEmpty(debitVal)) {
-      // amount is a debit
-      value = debitVal
-    } else if (!_isZeroOrEmpty(creditVal) && _isZeroOrEmpty(debitVal)) {
-      // amount is a credit
-      value = creditVal
-    } else {
-      throw new Error('both credit & debit are zero (0)')
-    }
-  }
-
-  return swapAmountFieldSign ? -value : value
-}
-
-const _getFieldValueFromRawData = R.curry(({ fieldName, colMap, tx }) => {
-  const colNum = R.prop(fieldName, colMap)
-  const val = tx[`field${colNum}`]
-  return isNilOrEmpty(val) ? '' : val
-})
-
 // const _log = (message) => (value) => console.log(message, value)
-const getDateValue = (colMap, tx) => {
-  // const a = _getFieldValueFromRawData(tFields.date.name, colMap, tx)
-  // const r = _toIsoString(a)
-
-  const a = R.pipe(
-    _getFieldValueFromRawData,
+const _getDateValue = (colMap, tx) => {
+  bluef('_getDateValue')
+  return R.pipe(
+    getFieldValueFromRawData,
     _toIsoString
   )({
     fieldName: tFields.date.name,
     colMap,
     tx
   })
-  green('a', a)
-  return a
+}
+
+const _getDescriptionValue = (colMap, tx) => {
+  bluef('_getDescriptionValue')
+  return R.pipe(
+    getFieldValueFromRawData,
+    _removeDoubleSpace,
+    R.trim
+  )({
+    fieldName: tFields.description.name,
+    colMap,
+    tx
+  })
+}
+
+const _getOrigDescriptionValue = (colMap, tx) => {
+  bluef('_getOrigDescriptionValue')
+  return R.pipe(
+    getFieldValueFromRawData,
+    _removeDoubleSpace,
+    R.trim
+  )({
+    fieldName: tFields.description.name,
+    colMap,
+    tx
+  })
+}
+
+const _getCheckNumber = (colMap, tx) => {
+  bluef('_getCheckNumber')
+  return R.pipe(getFieldValueFromRawData)({
+    fieldName: tFields.checkNumber.name,
+    colMap,
+    tx
+  })
+}
+
+const _getType = (colMap, tx) => {
+  bluef('_getType')
+  return getFieldValueFromRawData({ fieldName: tFields.type.name, colMap, tx })
 }
 
 export const transformData = (accountWithData) => {
-  const { account, data } = accountWithData
+  const { swapAmountFieldSign, account, data } = accountWithData
   // green('account', account)
 
   const { acctId, colMap } = account
@@ -87,26 +80,14 @@ export const transformData = (accountWithData) => {
   const mapToFields = (tx) => {
     const ret = {
       acctId,
-      date: getDateValue(colMap, tx),
-      description: R.pipe(
-        _getFieldValueFromRawData,
-        _removeDoubleSpace,
-        R.trim
-      )(tFields.description.name, account, tx),
-      origDescription: R.pipe(
-        _getFieldValueFromRawData,
-        _removeDoubleSpace,
-        R.trim
-      )(tFields.description.name, account, tx),
-      amount: R.pipe(_getAmountFieldValue)(tFields.amount.name, account, tx),
+      date: _getDateValue(colMap, tx),
+      description: _getDescriptionValue(colMap, tx),
+      origDescription: _getOrigDescriptionValue(colMap, tx),
+      amount: getAmountValue(swapAmountFieldSign, colMap, tx),
       category1: '',
       category2: '',
-      checkNumber: R.pipe(_getFieldValueFromRawData)(
-        tFields.checkNumber.name,
-        account,
-        tx
-      ),
-      type: _getFieldValueFromRawData(tFields.type.name, account, tx),
+      checkNumber: _getCheckNumber(colMap, tx),
+      type: _getType(colMap, tx),
       omit: false
     }
     return ret
