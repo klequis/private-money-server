@@ -73,7 +73,6 @@ const _getType = (colMap, tx) => {
 
 export const transformData = (accountWithData) => {
   const { swapAmountFieldSign, account, data } = accountWithData
-  // green('account', account)
 
   const { acctId, colMap } = account
 

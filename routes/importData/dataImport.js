@@ -94,12 +94,15 @@ const dataImport = async () => {
   const validAccts = await chkAcctFilesExist(allAccts)
 
   const allData = await Promise.all(R.map(getAccountRawData, validAccts))
-  // yellow('allData', allData)
-  // const acctsWithData = mergeAccountsAndData(allData, validAccts)
+  const a = R.sum(R.map((x) => R.append(x.length, []), allData))
+  yellow('allData.length', a)
+  const acctsWithData = mergeAccountsAndData(allData, validAccts)
 
-  // const finalData = R.map(transformData, acctsWithData)
-  // yellow('finalData', finalData)
-  // const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, finalData)
+  const finalData = R.unnest(R.map(transformData, acctsWithData))
+  yellow('finalData.length', finalData.length)
+  const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, finalData)
+  yellow('inserted.length', inserted.length)
+
   // yellow('acctsWithData', acctsWithData)
   // yellow('o', allData.length)
   // const acct1 = accounts[0]
@@ -123,7 +126,7 @@ const dataImport = async () => {
   //   }
   // ])
   // return JSON.stringify(allAccts)
-  return allData
+  return inserted
 }
 
 export default dataImport
