@@ -4,7 +4,7 @@ import {
   TRANSACTIONS_COLLECTION_NAME,
   transactionFields as tFields
 } from 'db/constants'
-import csv from 'csvtojson'
+import { readCsvFile } from './readCvsFile'
 import runRules from 'actions/runRules'
 import { transformData } from './transformData'
 import R from 'ramda'
@@ -57,34 +57,12 @@ const chkAcctFilesExist = async (accounts) => {
   return all.filter((a) => a.exists)
 }
 
-const _readCsvFile = async (account) => {
-  const { dataFilename, hasHeaders } = account
-
-  if (hasHeaders) {
-    const json = await csv({
-      trim: true,
-      checkType: true,
-      noheader: false,
-      headers: []
-    }).fromFile(`data/${dataFilename}`)
-    return json
-  } else {
-    const json = await csv({
-      trim: true,
-      checkType: true,
-      noheader: true,
-      headers: []
-    }).fromFile(`data/${dataFilename}`)
-    return json
-  }
-}
-
 const _insertToTransactionsCollection = async (data) => {
   await insertMany(TRANSACTIONS_COLLECTION_NAME, data)
   // return += inserted.length
 }
 
-const getAccountRawData = async (account) => _readCsvFile(account)
+const getAccountRawData = async (account) => readCsvFile(account)
 
 const zipFn = (data, acct) => {
   return {
@@ -112,12 +90,16 @@ const dataImport = async () => {
   // await runRules()
 
   const allAccts = await _getAccounts() // a database call
+
   const validAccts = await chkAcctFilesExist(allAccts)
 
   const allData = await Promise.all(R.map(getAccountRawData, validAccts))
   // yellow('allData', allData)
-  const acctsWithData = mergeAccountsAndData(allData, validAccts)
-  const finalData = R.map(transformData, acctsWithData)
+  // const acctsWithData = mergeAccountsAndData(allData, validAccts)
+
+  // const finalData = R.map(transformData, acctsWithData)
+  // yellow('finalData', finalData)
+  // const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, finalData)
   // yellow('acctsWithData', acctsWithData)
   // yellow('o', allData.length)
   // const acct1 = accounts[0]
@@ -133,13 +115,15 @@ const dataImport = async () => {
   // yellow('o', o[0][0])
   // yellow('acct1', acct1)
 
-  return JSON.stringify([
-    {
-      operation: 'load data',
-      status: 'success'
-      // numDocsLoaded: docsInserted
-    }
-  ])
+  // return JSON.stringify([
+  //   {
+  //     operation: 'load data',
+  //     status: 'success'
+  //     // numDocsLoaded: docsInserted
+  //   }
+  // ])
+  // return JSON.stringify(allAccts)
+  return allData
 }
 
 export default dataImport

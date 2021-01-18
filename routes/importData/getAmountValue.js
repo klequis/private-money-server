@@ -11,10 +11,10 @@ const _isCredit = (creditVal, debitVal) => {
 }
 
 const _getCreditOrDebit = (colMap, tx) => {
-  console.group('_getCreditOrDebit')
-  yellow('colMap', colMap)
-  yellow('tx', tx)
-  console.groupEnd()
+  // console.group('_getCreditOrDebit')
+  // yellow('colMap', colMap)
+  // yellow('tx', tx)
+  // console.groupEnd()
   const creditVal = getFieldValueFromRawData({
     fieldName: tFields.credit.name,
     colMap,
@@ -34,11 +34,11 @@ const _getCreditOrDebit = (colMap, tx) => {
 }
 
 export const getAmountValue = (swapAmountFieldSign, colMap, tx) => {
-  console.group('getAmountValue')
-  yellow('swapAmountFieldSign', swapAmountFieldSign)
-  yellow('colMap', colMap)
-  yellow('tx', tx)
-  console.groupEnd()
+  // console.group('getAmountValue')
+  // yellow('swapAmountFieldSign', swapAmountFieldSign)
+  // yellow('colMap', colMap)
+  // yellow('tx', tx)
+  // console.groupEnd()
   const { credit: creditColNum, debit: debitColNum } = colMap
   redf('----------------------------')
   const value =

@@ -48,14 +48,16 @@ const allDataByDescription = wrap(async (req, res) => {
   const { params } = req
   const { showOmitted } = params
 
-  const filter = showOmitted === 'true' ? { omit: { $eq: true } } : { omit: { $eq: false } }
+  const filter =
+    showOmitted === 'true' ? { omit: { $eq: true } } : { omit: { $eq: false } }
 
   const data = await find(TRANSACTIONS_COLLECTION_NAME, filter)
   // TODO: tmp code here
-  // const limit100 = R.take(100, data)
-  // res.send({ data: convertFieldValuesToUi(limit100), error: null })
+  const limit100 = R.take(5, data)
+  yellow('limit100', limit100)
+  res.send({ data: convertFieldValuesToUi(limit100), error: null })
 
-  res.send({ data: convertFieldValuesToUi(data), error: null })
+  // res.send({ data: convertFieldValuesToUi(data), error: null })
 })
 
 export default allDataByDescription

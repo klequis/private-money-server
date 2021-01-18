@@ -80,7 +80,6 @@ export const findOneAndReplace = async (collection, filter, replacement) => {
  * @returns {object}
  */
 export const insertMany = async (collection, data) => {
-  // TODO: Allows insertion of _id. Should it? If yes, should they be converted to ObjectID
   try {
     const { db } = await connectDB()
     const r = await db.collection(collection).insertMany(data)

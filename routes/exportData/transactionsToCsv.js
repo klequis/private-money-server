@@ -58,17 +58,11 @@ const makeFileName = () => {
   // yes this is ugly
   const d = new Date()
   const year = d.getFullYear()
-  // yellow('year', year)
   const month = getMonthPlusOne(d)
-  // yellow('month', month)
   const day = d.getDate().toString().padStart(2, '0')
-  // yellow('day', day)
   const hour = d.getHours().toString().padStart(2, '0')
-  // yellow('hour', hour)
   const minute = d.getMinutes().toString().padStart(2, '0')
-  // yellow('minutes', minute)
   const second = d.getSeconds().toString().padStart(2, '0')
-  // yellow('seconds', second)
   const datePart = `${year}${month}${day}-${hour}${minute}${second}`
   return `${datePart}.income-expense.csv`
 }
@@ -84,13 +78,11 @@ const writeFile = async (csv) => {
   return fileName
 }
 
-const addDiff = (doc) => {
-  // yellow('doc', doc)
-  const { debit, credit } = doc
-  const ret = R.mergeRight(doc, { amount: R.sum([debit, credit]) })
-  // yellow('ret', ret)
-  return ret
-}
+// const addDiff = (doc) => {
+//   const { debit, credit } = doc
+//   const ret = R.mergeRight(doc, { amount: R.sum([debit, credit]) })
+//   return ret
+// }
 
 const transactionsToCsv = async () => {
   try {
