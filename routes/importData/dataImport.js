@@ -12,7 +12,7 @@ import { fileExists } from 'lib/fileExists'
 const path = require('path')
 
 // eslint-disable-next-line
-import { green, red, redf, yellow } from 'logger'
+import { green, red, redf, yellow, greenf } from 'logger'
 
 const _dropDatabases = async (loadRaw) => {
   await dropCollection(TRANSACTIONS_COLLECTION_NAME)
@@ -43,7 +43,8 @@ const _createIndices = async () => {
     collation: { caseLevel: true, locale: 'en_US' }
   })
 }
-const chkAcctFilesExist = async (accounts) => {
+
+const _chkAcctFilesExist = async (accounts) => {
   const all = await Promise.all(
     accounts.map(async (a) => {
       const fullName = path.join('data', a.dataFilename)
@@ -53,7 +54,6 @@ const chkAcctFilesExist = async (accounts) => {
       })
     })
   )
-
   return all.filter((a) => a.exists)
 }
 
@@ -62,12 +62,10 @@ const _insertToTransactionsCollection = async (data) => {
   // return += inserted.length
 }
 
-const getAccountRawData = async (account) => readCsvFile(account)
-
 const zipFn = (data, acct) => {
   return {
     account: acct,
-    data: data
+    data: data.data
   }
 }
 
@@ -75,57 +73,63 @@ const mergeAccountsAndData = (data, accounts) => {
   return R.zipWith(zipFn, data, accounts)
 }
 
+const _printAcctNumChk = (acctWithData) => {
+  const { account, data } = acctWithData
+  const { acctId, expectedTxCount } = account
+  /* data shape is
+    {
+      acctid: '1234'
+      data: [
+        {}, {}
+      ]
+    }
+
+    Pick just the data
+  */
+
+  const dataLen = data.length
+  const msg = `expected ${expectedTxCount}, actual ${dataLen}`
+  dataLen === expectedTxCount ? greenf(acctId, msg) : redf(acctId, msg)
+}
+
 const dataImport = async () => {
   await _dropDatabases()
 
-  // const transformPipe = await R.pipe(
-  //   _readCsvFile,
-
-  //   // R.andThen(transformData)
-  //   // R.andThen(_insertToTransactionsCollection)
-  // )
-  // const b = R.map(transformPipe, accounts)
-  // yellow('b', b)
-  // await _createIndices()
-  // await runRules()
-
   const allAccts = await _getAccounts() // a database call
 
-  const validAccts = await chkAcctFilesExist(allAccts)
+  const validAccts = await _chkAcctFilesExist(allAccts)
 
-  const allData = await Promise.all(R.map(getAccountRawData, validAccts))
-  const a = R.sum(R.map((x) => R.append(x.length, []), allData))
-  yellow('allData.length', a)
+  /*
+      returns [
+        {
+          acctId: '1234'
+          data: [
+            {}, {}
+          ]
+        }
+      ]
+  */
+  const allData = await Promise.all(R.map(readCsvFile, validAccts))
+
+  /*
+      returns [
+        {
+          account: {}
+          data: [
+            {}, {}
+          ]
+        }
+      ]
+  */
   const acctsWithData = mergeAccountsAndData(allData, validAccts)
 
+  R.forEach(_printAcctNumChk, acctsWithData)
+
   const finalData = R.unnest(R.map(transformData, acctsWithData))
-  yellow('finalData.length', finalData.length)
   const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, finalData)
-  yellow('inserted.length', inserted.length)
-
-  // yellow('acctsWithData', acctsWithData)
-  // yellow('o', allData.length)
-  // const acct1 = accounts[0]
-
-  // const p = R.mergeRight(
-
-  // )
-
-  // R.mergeRight(accounts, { data: o })
-  // yellow('p', p)
-
-  // yellow('o', o.length) // yellow is console.log with color
-  // yellow('o', o[0][0])
-  // yellow('acct1', acct1)
-
-  // return JSON.stringify([
-  //   {
-  //     operation: 'load data',
-  //     status: 'success'
-  //     // numDocsLoaded: docsInserted
-  //   }
-  // ])
-  // return JSON.stringify(allAccts)
+  await _createIndices()
+  // TODO: re-enable
+  await runRules()
   return inserted
 }
 

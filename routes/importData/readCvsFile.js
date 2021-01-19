@@ -1,7 +1,7 @@
 import csv from 'csvtojson'
 
 export const readCsvFile = async (account) => {
-  const { dataFilename, hasHeaders } = account
+  const { dataFilename, hasHeaders, acctId } = account
 
   if (hasHeaders) {
     const json = await csv({
@@ -10,7 +10,7 @@ export const readCsvFile = async (account) => {
       noheader: false,
       headers: []
     }).fromFile(`data/${dataFilename}`)
-    return json
+    return { acctId, data: json }
   } else {
     const json = await csv({
       trim: true,
@@ -18,6 +18,7 @@ export const readCsvFile = async (account) => {
       noheader: true,
       headers: []
     }).fromFile(`data/${dataFilename}`)
-    return json
+    // returning acctId to help with validation (record count)
+    return { acctId, data: json }
   }
 }
