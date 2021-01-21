@@ -72,9 +72,9 @@ const _getType = (colMap, tx) => {
 }
 
 export const transformData = (accountWithData) => {
-  const { swapAmountFieldSign, account, data } = accountWithData
+  const { account, data } = accountWithData
 
-  const { acctId, colMap } = account
+  const { swapAmountFieldSign, acctId, colMap } = account
 
   const mapToFields = (tx) => {
     const ret = {
