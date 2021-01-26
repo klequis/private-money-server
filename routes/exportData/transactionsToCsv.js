@@ -13,6 +13,7 @@ import { yellow, redf } from 'logger'
 const jsonToCsv = (json) => {
   const replacer = (key, value) => (value === null ? '' : value) // specify how you want to handle null values here
   const header = [
+    tFields.txType.name,
     tFields.acctId.name,
     tFields.date.name,
     tFields.description.name,
@@ -90,7 +91,8 @@ const transactionsToCsv = async () => {
     const data = await find(TRANSACTIONS_COLLECTION_NAME, { omit: false })
     const dataFormatted = data.map((row) => {
       return R.mergeRight(row, {
-        date: format(new Date(row.date), 'MM/DD/YYYY')
+        date: format(new Date(row.date), 'MM/DD/YYYY'),
+        txType: row.category1 === 'income' ? 'income' : 'expense'
       })
     })
     // const a = R.map(addDiff, data)

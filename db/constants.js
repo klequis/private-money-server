@@ -96,6 +96,11 @@ export const transactionFields = {
     name: 'type',
     type: dataTypes.String,
     isCriteriaField: true
+  },
+  txType: {
+    name: 'txType',
+    type: dataTypes.String,
+    isCriteriaField: false
   }
 }
 
