@@ -5,6 +5,7 @@ import {
 } from 'db/constants'
 import fs from 'fs'
 import * as R from 'ramda'
+import { format } from 'date-fns'
 
 // eslint-disable-next-line
 import { yellow, redf } from 'logger'
@@ -87,8 +88,13 @@ const writeFile = async (csv) => {
 const transactionsToCsv = async () => {
   try {
     const data = await find(TRANSACTIONS_COLLECTION_NAME, { omit: false })
+    const dataFormatted = data.map((row) => {
+      return R.mergeRight(row, {
+        date: format(new Date(row.date), 'MM/DD/YYYY')
+      })
+    })
     // const a = R.map(addDiff, data)
-    const csvData = jsonToCsv(data)
+    const csvData = jsonToCsv(dataFormatted)
     const fileName = await writeFile(csvData)
     return { fileName, rows: data.length }
   } catch (e) {
