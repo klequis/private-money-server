@@ -14,10 +14,17 @@ const path = require('path')
 // eslint-disable-next-line
 import { green, red, redf, yellow, greenf } from 'logger'
 
-const _dropDatabases = async (loadRaw) => {
+/**
+ * @description drop the transactions and raw-data collection
+ */
+const _dropDatabases = async () => {
   await dropCollection(TRANSACTIONS_COLLECTION_NAME)
   await dropCollection('raw-data')
 }
+
+/**
+ * @description get list of active accounts
+ */
 
 const _getAccounts = async () => {
   return find(ACCOUNTS_COLLECTION_NAME, {
@@ -25,16 +32,19 @@ const _getAccounts = async () => {
   })
 }
 
-/**
- *
- * @param {string} acctId
- * @param {array} rawData
- */
-const _loadRawData = async (acctId, rawData) => {
-  const data = R.map((doc) => R.mergeRight(doc, { acctId }), rawData)
-  await insertMany('raw-data', data)
-}
+// /**
+//  *
+//  * @param {string} acctId
+//  * @param {array} rawData
+//  */
+// const _loadRawData = async (acctId, rawData) => {
+//   const data = R.map((doc) => R.mergeRight(doc, { acctId }), rawData)
+//   await insertMany('raw-data', data)
+// }
 
+/**
+ * @description Create index on 'description' & 'type'
+ */
 const _createIndices = async () => {
   await createIndex(TRANSACTIONS_COLLECTION_NAME, tFields.description.name, {
     collation: { caseLevel: true, locale: 'en_US' }
@@ -44,6 +54,10 @@ const _createIndices = async () => {
   })
 }
 
+/**
+ * @param {object} accounts array of account objects
+ * @description Returns array of accounts for which import files exist
+ */
 const _chkAcctFilesExist = async (accounts) => {
   const all = await Promise.all(
     accounts.map(async (a) => {
@@ -57,11 +71,16 @@ const _chkAcctFilesExist = async (accounts) => {
   return all.filter((a) => a.exists)
 }
 
-const _insertToTransactionsCollection = async (data) => {
-  await insertMany(TRANSACTIONS_COLLECTION_NAME, data)
-  // return += inserted.length
-}
+// const _insertToTransactionsCollection = async (data) => {
+//   await insertMany(TRANSACTIONS_COLLECTION_NAME, data)
+//   // return += inserted.length
+// }
 
+/**
+ * @param {array} data the transactions for the account
+ * @param {object} acct an account
+ * @return {object} data & acct in one object
+ */
 const zipFn = (data, acct) => {
   return {
     account: acct,
@@ -69,10 +88,19 @@ const zipFn = (data, acct) => {
   }
 }
 
+/**
+ * @param {array} data all tx
+ * @param {array} accounts all accounts
+ * @description return data & corresponding acct in one object
+ */
 const mergeAccountsAndData = (data, accounts) => {
   return R.zipWith(zipFn, data, accounts)
 }
 
+/**
+ * @param {object} acctWithData
+ * @description Print expected count match to console
+ */
 const _printAcctNumChk = (acctWithData) => {
   const { account, data } = acctWithData
   const { acctId, expectedTxCount } = account
@@ -92,6 +120,9 @@ const _printAcctNumChk = (acctWithData) => {
   dataLen === expectedTxCount ? greenf(acctId, msg) : redf(acctId, msg)
 }
 
+/**
+ * @description import data from all existing data files
+ */
 const dataImport = async () => {
   await _dropDatabases()
 
