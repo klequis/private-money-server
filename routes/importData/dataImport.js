@@ -9,6 +9,8 @@ import runRules from 'actions/runRules'
 import { transformData } from './transformData'
 import R from 'ramda'
 import { fileExists } from 'lib/fileExists'
+import { expectedTxCount } from 'secrets/expectedTxCount'
+
 const path = require('path')
 
 // eslint-disable-next-line
@@ -97,13 +99,18 @@ const mergeAccountsAndData = (data, accounts) => {
   return R.zipWith(zipFn, data, accounts)
 }
 
+const getExpectedCount = (acctId) => {
+  const first4 = acctId.substr(0, 4)
+  const count = R.prop(first4)(expectedTxCount)
+  return count
+}
 /**
  * @param {object} acctWithData
  * @description Print expected count match to console
  */
 const _printAcctNumChk = (acctWithData) => {
   const { account, data } = acctWithData
-  const { acctId, expectedTxCount } = account
+  const { acctId } = account
   /* data shape is
     {
       acctid: '1234'
@@ -116,6 +123,7 @@ const _printAcctNumChk = (acctWithData) => {
   */
 
   const dataLen = data.length
+  const expectedTxCount = getExpectedCount(acctId)
   const msg = `expected ${expectedTxCount}, actual ${dataLen}`
   dataLen === expectedTxCount ? greenf(acctId, msg) : redf(acctId, msg)
 }
