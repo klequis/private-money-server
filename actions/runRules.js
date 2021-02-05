@@ -150,12 +150,12 @@ const runRules = async (ruleId) => {
   //   rules = allRules
   // }
   const rules = await getRules(ruleId)
-  blue('runRules: num rules to run', rules.length)
+  // blue('runRules: num rules to run', rules.length)
   for (let i = 0; i < rules.length; i++) {
     const rule = rules[i]
     incrementCount('rule')
 
-    blue('runRules: running _id', rule._id)
+    // blue('runRules: running _id', rule._id)
 
     const { actions, criteria } = rule
 
