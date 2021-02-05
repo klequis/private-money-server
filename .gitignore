@@ -35,6 +35,7 @@ config.secret.js
 *.csv
 *.csv#
 */secrets
+secrets
 /server/data
 
 data/Book1.xlsx
