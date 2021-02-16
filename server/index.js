@@ -9,6 +9,7 @@ import criteria from 'routes/criteria'
 import debug from 'debug'
 import duplicates from 'routes/duplicates'
 import exportData from 'routes/exportData'
+import fileUpload from 'express-fileupload'
 
 import importData from 'routes/importData'
 import rules from 'routes/rules'
@@ -25,10 +26,12 @@ const cfg = config()
 
 const app = express()
 
+app.use(express.static('data'))
 app.use(helmet())
 app.use(cors())
 app.use(bodyParser.json())
 app.use(morgan('dev'))
+app.use(fileUpload())
 
 app.get('/health', async (req, res) => {
   try {
