@@ -1,7 +1,9 @@
 import mongodb, { ObjectID } from 'mongodb'
-import { hasProp } from 'lib'
+import { removeIdProp } from 'lib'
 import config from 'config'
+import { hasProp } from 'lib'
 import { mergeRight, isEmpty } from 'ramda'
+
 // eslint-disable-next-line
 import { green, yellow, redf } from 'logger'
 
@@ -38,9 +40,9 @@ const idStringToObjectID = (obj) => {
   }
 }
 
-const cfg = config()
 const connectDB = async () => {
   try {
+    const cfg = config()
     if (!client) {
       client = await MongoClient.connect(cfg.mongoUri, {
         useNewUrlParser: true,
@@ -49,7 +51,7 @@ const connectDB = async () => {
     }
     return { db: client.db(cfg.dbName) }
   } catch (e) {
-    throw new Error(e)
+    throw new Error('Unable to connect to MongoDB')
   }
 }
 
@@ -102,7 +104,6 @@ export const insertMany = async (collection, data) => {
 export const dropCollection = async (collection) => {
   try {
     const { db } = await connectDB()
-
     return await db.collection(collection).drop()
   } catch (e) {
     if (e.message === 'ns not found') {
@@ -135,8 +136,7 @@ export const insertOne = async (collection, data) => {
  *
  * @param {string} collection the name of a collection
  * @param {object} filter filter criteria
- * @param {object} projection a valid projection
- * @param {object} collation
+ * @param {object} project a valid projection
  * @returns {array}
  *
  */
