@@ -10,6 +10,7 @@ import debug from 'debug'
 import duplicates from 'routes/duplicates'
 import exportData from 'routes/exportData'
 import fileUpload from 'express-fileupload'
+import uploadFiles from 'routes/uploadFiles'
 
 import importData from 'routes/importData'
 import rules from 'routes/rules'
@@ -54,6 +55,7 @@ app.use('/api/export', exportData)
 app.use('/api/import', importData)
 app.use('/api/test', test)
 app.use('/api/duplicates', duplicates)
+app.use('/api/upload-files', uploadFiles)
 
 app.get('*', function (req, res) {
   throw new Error(`unknown route: ..${req.url}`)

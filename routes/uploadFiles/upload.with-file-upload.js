@@ -7,6 +7,7 @@ const upload = wrap(async (req, res) => {
   if (!req.files) {
     return res.status(500).send({ msg: 'file is not found' })
   }
+
   const myFile = req.files.file
   console.log(req.files.file)
 
