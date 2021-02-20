@@ -1,7 +1,6 @@
 import express from 'express'
 import morgan from 'morgan'
 import helmet from 'helmet'
-import bodyParser from 'body-parser'
 import cors from 'cors'
 import config from '../config'
 import categories from 'routes/categories'
@@ -9,7 +8,6 @@ import criteria from 'routes/criteria'
 import debug from 'debug'
 import duplicates from 'routes/duplicates'
 import exportData from 'routes/exportData'
-import fileUpload from 'express-fileupload'
 import uploadFiles from 'routes/uploadFiles'
 
 import importData from 'routes/importData'
@@ -27,12 +25,10 @@ const cfg = config()
 
 const app = express()
 
-app.use(express.static('data'))
+// app.use(express.static('data'))
 app.use(helmet())
 app.use(cors())
-app.use(bodyParser.json())
 app.use(morgan('dev'))
-app.use(fileUpload())
 
 app.get('/health', async (req, res) => {
   try {
