@@ -51,22 +51,6 @@ const dbName = (env) => {
   }
 }
 
-// const apiRoot = (env) => {
-//   switch (env) {
-//     case DEMO:
-//       return settings.apiRoot.local
-//     case DEV:
-//       return settings.apiRoot.local
-//     case PROD:
-//       return settings.apiRoot.remote
-//     case TEST_LOCAL:
-//       return settings.apiRoot.local
-
-//     default:
-//       throw new Error(unknowEnvName())
-//   }
-// }
-
 const port = (env) => {
   switch (env) {
     case DEMO:
@@ -81,17 +65,6 @@ const port = (env) => {
       throw new Error(unknowEnvName())
   }
 }
-
-// const setNodeEnv = (env) => {
-//   if (env) {
-//     return env
-//   } else if (process.env.NODE_ENV) {
-//     const ret = process.env.NODE_ENV
-//     return ret
-//   } else {
-//     return PROD
-//   }
-// }
 
 const config = () => {
   const _env = ecosystem.apps[0].env.NODE_ENV

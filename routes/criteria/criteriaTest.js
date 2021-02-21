@@ -7,7 +7,9 @@ import {
 import { filterBuilder } from 'actions/filterBuilder'
 import criteriaValidation from './criteriaTest.validation'
 
+/* eslint-disable */
 import { redf, green, logRequest } from 'logger'
+/* eslint-enable */
 
 const criteriaTest = wrap(async (req, res) => {
   const { body } = req

@@ -1,19 +1,12 @@
 module.exports = {
   extends: 'standard',
-  "env": {
+  env: {
     mocha: true
   },
   rules: {
     semi: ['warn', 'never'],
     quotes: ['warn', 'single'],
-    'space-before-function-paren': [
-      'error',
-      {
-        anonymous: 'never',
-        named: 'never',
-        asyncArrow: 'always'
-      }
-    ]
+    'space-before-function-paren': ['error', 'always']
   },
-  "parser": "babel-eslint"
+  parser: 'babel-eslint'
 }

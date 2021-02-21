@@ -9,7 +9,7 @@ import { filterBuilder } from 'actions/filterBuilder'
 import * as R from 'ramda'
 import { LOG_CRITERIA, LOG_FILTER } from 'global-constants'
 
-// eslint-disable-next-line
+/* eslint-disable */
 import {
   logCriteria,
   logActions,
@@ -20,6 +20,8 @@ import {
   redf,
   yellow
 } from 'logger'
+/* eslint-enable */
+
 import isNilOrEmpty from '../lib/isNilOrEmpty'
 import { findById } from '../db'
 
@@ -150,12 +152,12 @@ const runRules = async (ruleId) => {
   //   rules = allRules
   // }
   const rules = await getRules(ruleId)
-  blue('runRules: num rules to run', rules.length)
+  // blue('runRules: num rules to run', rules.length)
   for (let i = 0; i < rules.length; i++) {
     const rule = rules[i]
     incrementCount('rule')
 
-    blue('runRules: running _id', rule._id)
+    // blue('runRules: running _id', rule._id)
 
     const { actions, criteria } = rule
 

@@ -12,8 +12,6 @@ const checkValue = (value) => {
   }
 }
 
-
-
 export const red = R.curry((message, value) => {
   log(chalk.bgRed(` ${message} `), checkValue(value))
 })

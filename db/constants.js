@@ -2,7 +2,7 @@ import * as R from 'ramda'
 import dataTypes from './dataTypes'
 import { format } from 'date-fns'
 
-// eslint-disable-next-line
+/* eslint-disable */
 import { yellow, green, redf } from 'logger'
 
 const _log = (label) => (message) => {
@@ -18,6 +18,7 @@ const _log = (label) => (message) => {
 
   return yellow(label, message)
 }
+/* eslint-enable */
 
 export const TRANSACTIONS_COLLECTION_NAME = 'transactions'
 export const CATEGORIES_COLLECTION_NAME = 'categories'

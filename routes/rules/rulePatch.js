@@ -4,10 +4,9 @@ import {
   // TRANSACTIONS_COLLECTION_NAME,
   RULES_COLLECTION_NAME
 } from 'db/constants'
-import * as R from 'ramda'
 import { findOneAndUpdate } from 'db'
 import runRules from 'actions/runRules'
-import { toString } from 'lib'
+import { toString } from 'lib/toString'
 import { ObjectId } from 'mongodb'
 // import { wdCategory1, wdCategory2, wdDescription, wdRuleIds } from 'appWords'
 import { resetTx } from './resetTx'

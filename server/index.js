@@ -1,19 +1,24 @@
 import express from 'express'
 import morgan from 'morgan'
 import helmet from 'helmet'
-import bodyParser from 'body-parser'
 import cors from 'cors'
 import config from '../config'
-import categories from 'routes/categories'
+// import categories from 'routes/categories'
 import criteria from 'routes/criteria'
 import debug from 'debug'
 import duplicates from 'routes/duplicates'
 import exportData from 'routes/exportData'
+import uploadFiles from 'routes/uploadFiles'
 
 import importData from 'routes/importData'
 import rules from 'routes/rules'
 import test from 'routes/test'
 import views from 'routes/views'
+// --> tmp stuff
+import formidable from 'formidable'
+import fse from 'fs-extra'
+import path from 'path'
+// <-- tmp stuff
 
 // eslint-disable-next-line
 import { redf, red, green } from '../logger'
@@ -25,10 +30,38 @@ const cfg = config()
 
 const app = express()
 
+// app.use(express.static('data'))
 app.use(helmet())
 app.use(cors())
-app.use(bodyParser.json())
 app.use(morgan('dev'))
+
+const chkUploadsDir = async (dirPath) => {
+  try {
+    await fse.ensureDir(dirPath)
+    return true
+  } catch (err) {
+    return false
+  }
+}
+
+app.post('/api/upload', async (req, res, next) => {
+  const dirname = __dirname
+  const uploadsDir = path.join(__dirname, '../uploads')
+  const dirChk = await chkUploadsDir(uploadsDir)
+
+  if (!dirChk) {
+    res.json({ error: 'could not create upload directory' })
+  }
+  const form = formidable({ multiples: true, uploadDir: uploadsDir })
+  console.log('form', form)
+  form.parse(req, (err, fields, files) => {
+    if (err) {
+      next(err)
+      return
+    }
+    res.json({ fields, files, dirname, uploadsDir })
+  })
+})
 
 app.get('/health', async (req, res) => {
   try {
@@ -43,7 +76,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use('/api/categories', categories)
+// app.use('/api/categories', categories)
 app.use('/api/views', views)
 app.use('/api/rules', rules)
 app.use('/api/criteria', criteria)
@@ -51,6 +84,7 @@ app.use('/api/export', exportData)
 app.use('/api/import', importData)
 app.use('/api/test', test)
 app.use('/api/duplicates', duplicates)
+app.use('/api/upload-files', uploadFiles)
 
 app.get('*', function (req, res) {
   throw new Error(`unknown route: ..${req.url}`)

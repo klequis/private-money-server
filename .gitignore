@@ -37,5 +37,7 @@ config.secret.js
 */secrets
 secrets
 /server/data
+/server/uploads
+uploads
 
 data/Book1.xlsx
