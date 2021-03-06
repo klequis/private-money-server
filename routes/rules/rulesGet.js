@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { find } from 'db/dbFunctions'
 import { RULES_COLLECTION_NAME } from 'db/constants'
 

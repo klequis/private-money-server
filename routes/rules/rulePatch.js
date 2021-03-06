@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import {
   convertCriteriaValuesToDb,
   // TRANSACTIONS_COLLECTION_NAME,

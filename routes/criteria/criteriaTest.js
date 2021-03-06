@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { find } from 'db'
 import {
   convertCriteriaValuesToDb,

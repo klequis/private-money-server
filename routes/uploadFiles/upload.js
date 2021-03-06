@@ -1,5 +1,5 @@
-import wrap from 'routes/wrap'
-import formidable from 'formidable'
+import { wrap } from 'routes/wrap'
+import formidable from '../../formidable/src'
 import path from 'path'
 import fse from 'fs-extra'
 
@@ -16,28 +16,31 @@ const chkUploadsDir = async (dirPath) => {
 }
 
 const upload = wrap(async (req, res, next) => {
-  const dirname = __dirname
-  const uploadsDir = path.join(__dirname, '../../uploads')
-  const dirChk = await chkUploadsDir(uploadsDir)
-
-  if (!dirChk) {
-    res.json({ error: 'could not create upload directory' })
+  try {
+    const uploadDir = path.join(__dirname, '../../uploads')
+    await chkUploadsDir(uploadDir)
+    yellow('upload: uploadDir', uploadDir)
+    const form = formidable({
+      multiples: true,
+      uploadDir: uploadDir // - doesn't work :(
+    })
+    yellow('upload: form', form)
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        yellow('upload: PARSE ERROR')
+        next(err)
+        return
+      }
+      yellow('upload: RETURNING JSON')
+      res.json({ fields, files, uploadDir })
+    })
+    form.on('error', (error) => {
+      console.log('err', error)
+    })
+    form.on('end', () => console.log('DONE'))
+  } catch (e) {
+    console.log('e', e)
   }
-  const form = formidable({
-    multiples: true,
-    uploadDir: uploadsDir
-  })
-  console.log('form', form)
-  // form.uploadDir
-  // form.uploadDir: '/home/klequis/dev/formidable-express-react-ex/server/uploads'
-  form.uploadDir = uploadsDir
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      next(err)
-      return
-    }
-    res.json({ fields, files, dirname, uploadsDir })
-  })
 })
 
 export default upload

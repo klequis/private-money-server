@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import rawDataToCsv from './rawDataToCsv'
 
 // eslint-disable-next-line

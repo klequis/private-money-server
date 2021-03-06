@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 
 // eslint-disable-next-line
 import { green, yellow } from 'logger'

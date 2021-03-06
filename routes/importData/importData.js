@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import dataImport from './dataImport'
 
 // eslint-disable-next-line

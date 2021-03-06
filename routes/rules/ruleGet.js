@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { findById } from 'db/dbFunctions'
 import { RULES_COLLECTION_NAME, convertFieldValuesToUi } from 'db/constants'
 

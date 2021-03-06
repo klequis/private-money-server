@@ -44,24 +44,24 @@ const chkUploadsDir = async (dirPath) => {
   }
 }
 
-app.post('/api/upload', async (req, res, next) => {
-  const dirname = __dirname
-  const uploadsDir = path.join(__dirname, '../uploads')
-  const dirChk = await chkUploadsDir(uploadsDir)
+// app.post('/api/upload', async (req, res, next) => {
+//   const dirname = __dirname
+//   const uploadsDir = path.join(__dirname, '../uploads')
+//   const dirChk = await chkUploadsDir(uploadsDir)
 
-  if (!dirChk) {
-    res.json({ error: 'could not create upload directory' })
-  }
-  const form = formidable({ multiples: true, uploadDir: uploadsDir })
-  console.log('form', form)
-  form.parse(req, (err, fields, files) => {
-    if (err) {
-      next(err)
-      return
-    }
-    res.json({ fields, files, dirname, uploadsDir })
-  })
-})
+//   if (!dirChk) {
+//     res.json({ error: 'could not create upload directory' })
+//   }
+//   const form = formidable({ multiples: true, uploadDir: uploadsDir })
+//   console.log('form', form)
+//   form.parse(req, (err, fields, files) => {
+//     if (err) {
+//       next(err)
+//       return
+//     }
+//     res.json({ fields, files, dirname, uploadsDir })
+//   })
+// })
 
 app.get('/health', async (req, res) => {
   try {
@@ -84,7 +84,7 @@ app.use('/api/export', exportData)
 app.use('/api/import', importData)
 app.use('/api/test', test)
 app.use('/api/duplicates', duplicates)
-app.use('/api/upload-files', uploadFiles)
+app.use('/api/uploadFiles', uploadFiles)
 
 app.get('*', function (req, res) {
   throw new Error(`unknown route: ..${req.url}`)
