@@ -129,6 +129,7 @@ const dataImport = async () => {
   const allAccts = await _getAccounts() // a database call
 
   const validAccts = await _chkAcctFilesExist(allAccts)
+  yellow('accounts', validAccts)
 
   /*
       returns [
