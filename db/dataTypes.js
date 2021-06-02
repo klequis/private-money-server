@@ -4,7 +4,8 @@ const dataTypes = {
   Number: 'Number',
   Array: 'Array',
   Boolean: 'Boolean',
-  Date: 'Date'
+  Date: 'Date',
+  Undefined: 'Undefined'
 }
 
 export default dataTypes
