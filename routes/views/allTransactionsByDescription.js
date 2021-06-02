@@ -4,6 +4,7 @@ import {
   TRANSACTIONS_COLLECTION_NAME,
   convertFieldValuesToUi
 } from 'db/constants'
+import isNilOrEmpty from 'lib/isNilOrEmpty'
 
 /* eslint-disable */
 import { yellow, red, redf } from 'logger'
@@ -46,12 +47,17 @@ import * as R from 'ramda'
 
 const allDataByDescription = wrap(async (req, res) => {
   const { params } = req
-  const { showOmitted } = params
+  const { showOmitted, year, month } = params
 
-  const filter =
+  // yellow('params', params)
+  yellow('year', year)
+  yellow('month', R.type(month))
+  const f1 =
     showOmitted === 'true' ? { omit: { $eq: true } } : { omit: { $eq: false } }
 
-  const data = await find(TRANSACTIONS_COLLECTION_NAME, filter)
+  // const f2 = !isNilOrEmpty(year) ? R.merge(f1, { })
+
+  const data = await find(TRANSACTIONS_COLLECTION_NAME, f1)
   // TODO: tmp code here
   // const limit = R.take(5, data)
   // yellow('limit100', limit100)
