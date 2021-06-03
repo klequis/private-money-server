@@ -11,12 +11,12 @@ import { LOG_CRITERIA, LOG_FILTER } from 'global-constants'
 
 // eslint-disable-next-line
 import {
-  logCriteria,
-  logActions,
-  logFilter,
-  blue,
-  green,
-  greenf,
+  // logCriteria,
+  // logActions,
+  // logFilter,
+  // blue,
+  // green,
+  // greenf,
   redf,
   yellow
 } from 'logger'
@@ -170,6 +170,7 @@ const runRules = async (ruleId) => {
 
     const f = await find(TRANSACTIONS_COLLECTION_NAME, filter)
     for (let j = 0; j < actions.length; j++) {
+      const action = actions[j]
       switch (action.actionType) {
         case actionTypes.omit:
           await updateMany(

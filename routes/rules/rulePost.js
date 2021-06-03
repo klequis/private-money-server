@@ -10,9 +10,9 @@ import runRules from 'actions/runRules'
 import { filterBuilder } from 'actions/filterBuilder'
 import * as R from 'ramda'
 
-// eslint-disable-next-line
+/* eslint-disable */
 import { yellow, redf, blue } from 'logger'
-// import {} from '../../db/constants'
+/* eslint-enable */
 
 const replaceTmpId = (obj) => {
   return R.mergeRight(obj, { _id: ObjectID() })
@@ -44,7 +44,7 @@ const rulePost = wrap(async (req, res) => {
   // const test = await find(TRANSACTIONS_COLLECTION_NAME, updateFilter)
   // yellow('test', test)
 
-  const ret = await updateMany(TRANSACTIONS_COLLECTION_NAME, updateFilter, [
+  await updateMany(TRANSACTIONS_COLLECTION_NAME, updateFilter, [
     {
       $set: {
         category1: '',

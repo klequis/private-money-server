@@ -1,7 +1,6 @@
 /*
-  This version of send request has been modified
-  to exclude functionality related to tokens
-
+    This version of send request has been modified
+    to exclude functionality related to tokens
 */
 
 import app from 'server'
@@ -10,7 +9,7 @@ import request from 'supertest'
 // eslint-disable-next-line
 import { green, yellow, redf } from 'logger'
 
-const invalidMethodErrMsg = receivedMethod => {
+const invalidMethodErrMsg = (receivedMethod) => {
   return `'method' must be one of ['post', 'delete', 'get', 'patch']. Received ${receivedMethod}`
 }
 
@@ -49,6 +48,7 @@ const sendRequest = async ({
     }
 
     if (status === undefined || typeof status !== 'number') {
+      // eslint-disable-next-line
       throw new Error(`'status' must be a number`)
     }
 

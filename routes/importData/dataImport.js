@@ -13,9 +13,10 @@ import { expectedTxCount } from 'secrets/expectedTxCount'
 
 const path = require('path')
 
-// eslint-disable-next-line
+/* eslint-disable */
 import { green, red, redf, yellow, greenf } from 'logger'
 import { blue } from 'chalk'
+/* eslint-enable */
 
 /**
  * @description drop the transactions and raw-data collection

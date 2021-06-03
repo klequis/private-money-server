@@ -1,10 +1,5 @@
 import { wrap } from 'routes/wrap'
-import {
-  convertCriteriaValuesToDb,
-  // TRANSACTIONS_COLLECTION_NAME,
-  RULES_COLLECTION_NAME
-} from 'db/constants'
-import * as R from 'ramda'
+import { convertCriteriaValuesToDb, RULES_COLLECTION_NAME } from 'db/constants'
 import { findOneAndUpdate } from 'db'
 import runRules from 'actions/runRules'
 import { toString } from 'lib'
