@@ -1,13 +1,16 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { find } from 'db'
-import { TRANSACTIONS_COLLECTION_NAME, convertFieldValuesToUi } from 'db/constants'
+import {
+  TRANSACTIONS_COLLECTION_NAME,
+  convertFieldValuesToUi
+} from 'db/constants'
 import { toBoolean, isEmpty } from 'validator'
 import { isNil, mergeRight } from 'ramda'
 
 // eslint-disable-next-line
 import { red, green, logRequest } from 'logger'
 
-const isEmptyOrUndefined = val => {
+const isEmptyOrUndefined = (val) => {
   if (isNil(val)) {
     return true
   }

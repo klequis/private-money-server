@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { executeAggregate, find, updateMany } from 'db/dbFunctions'
 import { TRANSACTIONS_COLLECTION_NAME, duplicateStatus } from 'db/constants'
 import * as R from 'ramda'

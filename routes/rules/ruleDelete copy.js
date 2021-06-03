@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import {
   TRANSACTIONS_COLLECTION_NAME,
   RULES_COLLECTION_NAME

@@ -170,8 +170,6 @@ const runRules = async (ruleId) => {
 
     const f = await find(TRANSACTIONS_COLLECTION_NAME, filter)
     for (let j = 0; j < actions.length; j++) {
-      const action = actions[j]
-      // green('action', action)
       switch (action.actionType) {
         case actionTypes.omit:
           await updateMany(

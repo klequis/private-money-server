@@ -5,20 +5,6 @@ import { format } from 'date-fns'
 // eslint-disable-next-line
 import { yellow, green, redf } from 'logger'
 
-const _log = (label) => (message) => {
-  // if (label === 'start') {
-  //   return green('start ----------------------- /n')
-  // }
-  // if (label === 'end') {
-  //   return green('end -----------------------')
-  // }
-  // if (label === 'initial') {
-  //   return yellow(label, message)
-  // }
-
-  return yellow(label, message)
-}
-
 export const TRANSACTIONS_COLLECTION_NAME = 'transactions'
 export const CATEGORIES_COLLECTION_NAME = 'categories'
 export const TRANSACTIONS_RULE_MAP_COLLECTION_NAME = 'transactions-rule-map'

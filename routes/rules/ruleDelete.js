@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { RULES_COLLECTION_NAME } from 'db/constants'
 import { findOneAndDelete } from 'db'
 import { ObjectId } from 'mongodb'

@@ -15,6 +15,7 @@ const path = require('path')
 
 // eslint-disable-next-line
 import { green, red, redf, yellow, greenf } from 'logger'
+import { blue } from 'chalk'
 
 /**
  * @description drop the transactions and raw-data collection
@@ -136,7 +137,7 @@ const dataImport = async () => {
 
   const allAccts = await _getAccounts() // a database call
 
-  const validAccts = await _chkAcctFilesExist(allAccts)
+  const validAccts = await _chkAcctFilesExist(allAccts) // proc not needed
   yellow('accounts', validAccts)
 
   /*
@@ -149,6 +150,9 @@ const dataImport = async () => {
         }
       ]
   */
+  // NEW
+  // - will map files[] not validAccts
+  // - will need: hasHeaders, hasCreditDebitFields, colMap & swapAmountFieldSign
   const allData = await Promise.all(R.map(readCsvFile, validAccts))
 
   /*
@@ -161,14 +165,40 @@ const dataImport = async () => {
         }
       ]
   */
+  // - Not sure what to do with this yet. Could create account objects to pass along by combining account
+  // - Will need: ?
   const acctsWithData = mergeAccountsAndData(allData, validAccts)
 
   R.forEach(_printAcctNumChk, acctsWithData)
 
+  /* transformData returns
+
+    [
+      [
+        {tx},
+        {tx}
+      ],
+      [
+        {tx},
+        {tx}
+      ]
+      ...
+    ]
+
+  */
+  /* R.unnest() turns result of transformData to
+    [
+      {tx},
+      {tx},
+      {tx},
+      ...
+    ]
+ */
+  // - Will need: swapAmountFieldSign, acctId?, colMap
   const finalData = R.unnest(R.map(transformData, acctsWithData))
+
   const inserted = await insertMany(TRANSACTIONS_COLLECTION_NAME, finalData)
   await _createIndices()
-  // TODO: re-enable
   await runRules()
   return inserted
 }

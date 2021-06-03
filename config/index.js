@@ -95,7 +95,6 @@ const port = (env) => {
 
 const config = () => {
   const _env = ecosystem.apps[0].env.NODE_ENV
-  green('_env', _env)
   const envExists = [DEMO, DEV, PROD, TEST_LOCAL].findIndex((i) => i === _env)
 
   if (!(envExists >= 0)) {

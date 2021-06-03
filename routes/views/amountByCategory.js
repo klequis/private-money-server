@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { executeAggregate } from 'db/dbFunctions'
 import { TRANSACTIONS_COLLECTION_NAME } from 'db/constants'
 
@@ -13,15 +13,19 @@ const amountByCategory = wrap(async (req, res) => {
   const addFields = {
     $addFields: {
       // amount: '$debit'
-      amount: { 
-        $cond: { 
-          if: { $gt: ['$credit', 0] }, then: '$credit', else: '$debit' 
-        } 
+      amount: {
+        $cond: {
+          if: { $gt: ['$credit', 0] },
+          then: '$credit',
+          else: '$debit'
+        }
       },
-      type: { 
-        $cond: { 
-          if: { $gt: ['$credit', 0] }, then: 'credit', else: 'debit' 
-        } 
+      type: {
+        $cond: {
+          if: { $gt: ['$credit', 0] },
+          then: 'credit',
+          else: 'debit'
+        }
       }
     }
   }
@@ -38,7 +42,6 @@ const amountByCategory = wrap(async (req, res) => {
       type: 1
     }
   }
-
 
   const group1 = {
     $group: {

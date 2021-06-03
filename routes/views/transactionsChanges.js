@@ -1,6 +1,8 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { executeAggregate } from 'db/dbFunctions'
-import { TRANSACTIONS_COLLECTION_NAME /*, RULES_COLLECTION_NAME */ } from 'db/constants'
+import {
+  TRANSACTIONS_COLLECTION_NAME /*, RULES_COLLECTION_NAME */
+} from 'db/constants'
 import { sortBy, compose, toLower, prop } from 'ramda'
 
 // eslint-disable-next-line
@@ -24,10 +26,8 @@ const changesByDataDoc = wrap(async (req, res, next) => {
 
   const ret = await executeAggregate(TRANSACTIONS_COLLECTION_NAME, q)
 
-  const a = ret.map(r => {
+  const a = ret.map((r) => {
     const flatRules = r.ruleIds.flat()
-    green('flatRules', flatRules)
-    green('r', r)
     const x = {
       _id: r._id,
       orig: r.orig,

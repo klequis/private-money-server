@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { executeAggregate } from 'db/dbFunctions'
 import {
   TRANSACTIONS_COLLECTION_NAME,

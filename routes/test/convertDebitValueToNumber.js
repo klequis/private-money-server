@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { find, findOneAndReplace } from 'db/dbFunctions'
 import { RULES_COLLECTION_NAME } from 'db/constants'
 import { ObjectID, ObjectId } from 'mongodb'
@@ -23,10 +23,7 @@ const convertValueField = (criterion) => {
 //   // R.map(_log(''))
 // )
 
-const modDebitValue1 = R.pipe(
-  R.tap(_log('initial')),
-  R.map(convertValueField)
-)
+const modDebitValue1 = R.pipe(R.tap(_log('initial')), R.map(convertValueField))
 
 const test = wrap(async (req, res) => {
   const rulesToMod = await find(RULES_COLLECTION_NAME, {
@@ -36,7 +33,10 @@ const test = wrap(async (req, res) => {
     ]
   })
 
-  const s = R.map(x => R.mergeRight(x, { criteria: modDebitValue1(x.criteria) }), rulesToMod)
+  const s = R.map(
+    (x) => R.mergeRight(x, { criteria: modDebitValue1(x.criteria) }),
+    rulesToMod
+  )
   for (let i = 0; i < s.length; i++) {
     await findOneAndReplace(RULES_COLLECTION_NAME, { _id: s[i]._id }, s[i])
     // const t = await find(RULES_COLLECTION_NAME, { _id: s[i]._id })

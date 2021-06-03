@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import {
   convertCriteriaValuesToDb,
   // TRANSACTIONS_COLLECTION_NAME,
@@ -48,7 +48,6 @@ const rulePatch = wrap(async (req, res) => {
   //   ]
   // )
   const ret = resetTx(ruleObjId)
-  console.log('ret', ret)
 
   // await updateMany
 

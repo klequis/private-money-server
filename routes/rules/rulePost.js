@@ -1,4 +1,4 @@
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import {
   RULES_COLLECTION_NAME,
   convertCriteriaValuesToDb,
@@ -55,7 +55,6 @@ const rulePost = wrap(async (req, res) => {
     }
   ])
 
-  console.log('ret', ret)
   /* ----------------------------------------------------- */
 
   const newRule = {

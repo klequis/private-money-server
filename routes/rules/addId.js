@@ -7,7 +7,7 @@
     3. use replaceOne to updtae it
 */
 
-import wrap from 'routes/wrap'
+import { wrap } from 'routes/wrap'
 import { RULES_COLLECTION_NAME } from 'db/constants'
 import { find, findOneAndReplace } from 'db/dbFunctions'
 import { mergeRight } from 'ramda'
