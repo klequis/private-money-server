@@ -14,6 +14,7 @@ import importData from 'routes/importData'
 import rules from 'routes/rules'
 import test from 'routes/test'
 import views from 'routes/views'
+import accounts from 'routes/accounts'
 
 // eslint-disable-next-line
 import { redf, red, green } from '../logger'
@@ -51,8 +52,9 @@ app.use('/api/export', exportData)
 app.use('/api/import', importData)
 app.use('/api/test', test)
 app.use('/api/duplicates', duplicates)
+app.use('/api/accounts', accounts)
 
-app.get('*', function (req, res) {
+app.get('*', function(req, res) {
   throw new Error(`unknown route: ..${req.url}`)
 })
 
