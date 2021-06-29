@@ -7,7 +7,6 @@ import { red, green, yellow, logRequest } from 'logger'
 
 const accountsGet = wrap(async (req, res) => {
   const f = await find(ACCOUNTS_COLLECTION_NAME, {})
-  yellow('f', f)
   res.send({ data: f, error: null })
 })
 

@@ -9,7 +9,6 @@ import criteria from 'routes/criteria'
 import debug from 'debug'
 import duplicates from 'routes/duplicates'
 import exportData from 'routes/exportData'
-
 import importData from 'routes/importData'
 import rules from 'routes/rules'
 import test from 'routes/test'
