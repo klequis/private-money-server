@@ -28,7 +28,12 @@ const makeNonCsvFileReturn = (result) => {
 const makeReturnMessage = (result) => {
   const { files } = result
   if (isNilOrEmpty(files)) {
-    makeNonCsvFileReturn(result)
+    const { fields } = result
+
+    return {
+      data: { originalFilename: R.keys(fields)[0] },
+      error: 'Only .csv files are accepted.'
+    }
   } else {
     const file = R.path(['files', 'uploadedFiles'], result)
     return {
@@ -36,8 +41,7 @@ const makeReturnMessage = (result) => {
         lastModifiedDate: R.prop('lastModifiedDate')(file),
         filePath: R.prop('filepath')(file),
         newFilename: R.prop('newFilename')(file),
-        originalFilename: R.prop('originalFilename')(file),
-        acctId: R.prop('originalFilename')(file)
+        originalFilename: R.prop('originalFilename')(file)
       },
       error: null
     }
