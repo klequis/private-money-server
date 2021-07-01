@@ -5,6 +5,7 @@ import fs from 'fs-extra'
 import { green } from 'chalk'
 import * as R from 'ramda'
 import { isNilOrEmpty } from 'lib/isNilOrEmpty'
+import { yellow } from 'logger'
 
 /*
     When a non-csv file is uploaded result will be
@@ -15,24 +16,28 @@ import { isNilOrEmpty } from 'lib/isNilOrEmpty'
     }
 
 */
-const getFilenameNonCsv = (result) => {
+const makeNonCsvFileReturn = (result) => {
   const { fields } = result
-  return R.keys(fields)[0]
+
+  return {
+    data: { filename: R.keys(fields)[0] },
+    error: 'Only .csv files are accepted.'
+  }
 }
 
 const makeReturnMessage = (result) => {
   const { files } = result
   if (isNilOrEmpty(files)) {
-    // get filename from
-    return {
-      data: { filename: getFilenameNonCsv(result) },
-      error: 'Only .csv files are accepted.'
-    }
+    makeNonCsvFileReturn(result)
   } else {
+    const file = R.path(['files', 'uploadedFiles'], result)
     return {
-      // data: { filename: files.uploadedFiles.originalFilename },
       data: {
-        filename: R.path(['files', 'uploadedFiles', 'originalFilename'], result)
+        lastModifiedDate: R.prop('lastModifiedDate')(file),
+        filePath: R.prop('filepath')(file),
+        newFilename: R.prop('newFilename')(file),
+        originalFilename: R.prop('originalFilename')(file),
+        acctId: R.prop('originalFilename')(file)
       },
       error: null
     }
@@ -65,35 +70,7 @@ const importPost = wrap(async (req, res) => {
       resolve({ fields, files, uploadDir })
     })
   })
-  // console.log('typeof files', typeof files)
-  // files.forEach((f) => console.log('f', typeof f))
-  // console.log('files', files)
-  // console.log(
-  //   'files.uploadedFiles.originalFilename',
-  //   files.uploadedFiles.originalFilename
-  // )
-  // console.log('files', files.uploadedFiles)
-  /*
-      If a file which is not .csv is uploaded `result.files will === {}`
-      Returning {} would add not useful information to the client
-      so filter it/them out.
-  */
-  console.log('result', result)
-
   res.json(makeReturnMessage(result))
-  // res.json({ b: 'a' })
-
-  // TODO: Confirm this code is needed or not
-  // const r = files.uploadedFiles.map((f) => {
-  //   return {
-  //     lastModifiedDate: f.lastModifiedDate,
-  //     filePath: f.filepath,
-  //     newFilename: f.newFilename,
-  //     originalFilename: f.originalFilename,
-  //     acctId: fields[f.originalFilename][1]
-  //   }
-  // })
-  // res.json(r.map((f) => f.originalFilename))
 
   form.on('error', function (error) {
     console.log('err', error)
