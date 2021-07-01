@@ -4,7 +4,7 @@ import {
   TRANSACTIONS_COLLECTION_NAME,
   convertFieldValuesToUi
 } from 'db/constants'
-import isNilOrEmpty from 'lib/isNilOrEmpty'
+// import { isNilOrEmpty } from 'lib/isNilOrEmpty'
 
 /* eslint-disable */
 import { yellow, red, redf } from 'logger'
