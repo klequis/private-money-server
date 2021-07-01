@@ -5,7 +5,7 @@ import { getAmountValue } from './getAmountValue'
 
 // eslint-disable-next-line
 import { green, red, redf, yellow, blue, bluef } from 'logger'
-// import isNilOrEmpty from '../../lib/isNilOrEmpty'
+// import {isNilOrEmpty} from '../../lib/isNilOrEmpty'
 
 const _removeDoubleSpace = (value) => value.replace(/\s{2,}/g, ' ').trim()
 

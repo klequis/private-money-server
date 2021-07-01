@@ -20,7 +20,7 @@ import {
   redf,
   yellow
 } from 'logger'
-import isNilOrEmpty from '../lib/isNilOrEmpty'
+import { isNilOrEmpty } from '../lib/isNilOrEmpty'
 import { findById } from '../db'
 
 // const printFilter = (filter) => {

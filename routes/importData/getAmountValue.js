@@ -1,5 +1,5 @@
 import { transactionFields as tFields } from 'db/constants'
-import isNilOrEmpty from 'lib/isNilOrEmpty'
+import { isNilOrEmpty } from 'lib/isNilOrEmpty'
 import { getFieldValueFromRawData } from './getFieldValueFromRawData'
 // eslint-disable-next-line
 import { green, red, redf, yellow, blue, bluef } from 'logger'

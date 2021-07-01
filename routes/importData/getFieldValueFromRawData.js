@@ -1,4 +1,4 @@
-import isNilOrEmpty from 'lib/isNilOrEmpty'
+import { isNilOrEmpty } from 'lib/isNilOrEmpty'
 import R from 'ramda'
 // eslint-disable-next-line
 import { yellow } from 'logger'
