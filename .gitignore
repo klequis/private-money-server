@@ -39,4 +39,4 @@ secrets
 /server/data
 
 data/Book1.xlsx
-uploads
+**/uploads
