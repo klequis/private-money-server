@@ -91,7 +91,7 @@ const transactionsToCsv = async () => {
     const data = await find(TRANSACTIONS_COLLECTION_NAME, { omit: false })
     const dataFormatted = data.map((row) => {
       return R.mergeRight(row, {
-        date: format(new Date(row.date), 'MM/DD/YYYY'),
+        date: format(new Date(row.date), 'MM/dd/yyyy'),
         txType: row.category1 === 'income' ? 'income' : 'expense'
       })
     })
