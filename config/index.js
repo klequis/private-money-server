@@ -31,6 +31,8 @@ const mongoUri = (env) => {
       lConfig('env: ', env)
       lConfig('monguUri: ', settings.db.testLocal.mongoUri)
       return settings.db.testLocal.mongoUri
+    case 'prod-local':
+      return settings.db.prodLocal.mongoUri
     default:
       throw new Error(unknowEnvName())
   }
@@ -46,6 +48,8 @@ const dbName = (env) => {
       return settings.db[PROD].dbName
     case TEST_LOCAL:
       return settings.db[TEST_LOCAL].dbName
+    case 'prod-local':
+      return 'pm-local-prod'
     default:
       throw new Error(unknowEnvName())
   }
@@ -77,6 +81,8 @@ const port = (env) => {
       return settings.serverPort.remote
     case TEST_LOCAL:
       return settings.serverPort.local
+    case 'prod-local':
+      return 3030
     default:
       throw new Error(unknowEnvName())
   }
@@ -95,7 +101,12 @@ const port = (env) => {
 
 const config = () => {
   const _env = ecosystem.apps[0].env.NODE_ENV
-  const envExists = [DEMO, DEV, PROD, TEST_LOCAL].findIndex((i) => i === _env)
+
+  // green('ecosystem', ecosystem)
+  green('_env', _env)
+  const envExists = [DEMO, DEV, PROD, TEST_LOCAL, 'prod-local'].findIndex(
+    (i) => i === _env
+  )
 
   if (!(envExists >= 0)) {
     throw new Error(unknowEnvName())
