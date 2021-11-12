@@ -99,11 +99,12 @@ const mergeAccountsAndData = (data, accounts) => {
   return R.zipWith(zipFn, data, accounts)
 }
 
-const getExpectedCount = (acctId) => {
-  const first4 = acctId.substr(0, 4)
-  const count = R.prop(first4)(expectedTxCount)
-  return count
-}
+// replaced by expectedRows in accounts collection
+// const getExpectedCount = (acctId) => {
+//   const first4 = acctId.substr(0, 4)
+//   const count = R.prop(first4)(expectedTxCount)
+//   return count
+// }
 /**
  * @param {object} acctWithData
  * @description Print expected count match to console
@@ -111,6 +112,7 @@ const getExpectedCount = (acctId) => {
 const _printAcctNumChk = (acctWithData) => {
   const { account, data } = acctWithData
   const { acctId } = account
+  // yellow('acctWithData', acctWithData)
   /* data shape is
     {
       acctid: '1234'
@@ -123,9 +125,10 @@ const _printAcctNumChk = (acctWithData) => {
   */
 
   const dataLen = data.length
-  const expectedTxCount = getExpectedCount(acctId)
-  const msg = `expected ${expectedTxCount}, actual ${dataLen}`
-  dataLen === expectedTxCount ? greenf(acctId, msg) : redf(acctId, msg)
+  const expectedLen = account.expectedRows
+  // const expectedTxCount = getExpectedCount(acctId)
+  const msg = `expected ${expectedLen}, actual ${dataLen}`
+  dataLen === expectedLen ? greenf(acctId, msg) : redf(acctId, msg)
 }
 
 /**
@@ -137,7 +140,7 @@ const dataImport = async () => {
   const allAccts = await _getAccounts() // a database call
 
   const validAccts = await _chkAcctFilesExist(allAccts)
-  yellow('accounts', validAccts)
+  // yellow('accounts', validAccts)
 
   /*
       returns [

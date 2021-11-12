@@ -20,7 +20,7 @@ const _toIsoString = (value) => {
 
 // const _log = (message) => (value) => console.log(message, value)
 const _getDateValue = (colMap, tx) => {
-  bluef('_getDateValue')
+  // bluef('_getDateValue')
   return R.pipe(
     getFieldValueFromRawData,
     _toIsoString
@@ -32,7 +32,7 @@ const _getDateValue = (colMap, tx) => {
 }
 
 const _getDescriptionValue = (colMap, tx) => {
-  bluef('_getDescriptionValue')
+  // bluef('_getDescriptionValue')
   return R.pipe(
     getFieldValueFromRawData,
     _removeDoubleSpace,
@@ -45,7 +45,7 @@ const _getDescriptionValue = (colMap, tx) => {
 }
 
 const _getOrigDescriptionValue = (colMap, tx) => {
-  bluef('_getOrigDescriptionValue')
+  // bluef('_getOrigDescriptionValue')
   return R.pipe(
     getFieldValueFromRawData,
     _removeDoubleSpace,
@@ -58,7 +58,7 @@ const _getOrigDescriptionValue = (colMap, tx) => {
 }
 
 const _getCheckNumber = (colMap, tx) => {
-  bluef('_getCheckNumber')
+  // bluef('_getCheckNumber')
   return R.pipe(getFieldValueFromRawData)({
     fieldName: tFields.checkNumber.name,
     colMap,
@@ -67,7 +67,7 @@ const _getCheckNumber = (colMap, tx) => {
 }
 
 const _getType = (colMap, tx) => {
-  bluef('_getType')
+  // bluef('_getType')
   return getFieldValueFromRawData({ fieldName: tFields.type.name, colMap, tx })
 }
 
